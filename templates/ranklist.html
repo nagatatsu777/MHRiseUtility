@@ -1,0 +1,24 @@
+<!DOCTYPE html> 
+<html>
+    <head>
+        <title> Login</title>
+    </head>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+    <body>
+        <div class = "login-page">
+            <div class = "userForms">
+            <h2 style = "margin-top: 1em;">クエストリスト</h2>
+            <form class = "login-form" action = "/ranklist" method = "POST" onsubmit = "userValidate()">
+                {% for i in lists%}
+                    <button type = "submit" name = "submit"value = "{{i.questrank}}">{{i.questrank}}</button><br>
+                {%endfor%}
+    
+                 <script>
+
+                
+             </script>
+            </form>
+            </div>
+        </div>
+    </body>
+</html>
