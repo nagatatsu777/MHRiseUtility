@@ -1,0 +1,20 @@
+<!DOCTYPE html> 
+<html>
+    <head>
+        <title> Login</title>
+    </head>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+    <body>
+        <div class = "login-page">
+            <div class = "userForms">
+            <h2 style = "margin-top: 1em;">ようこそ(Login)</h2>
+            <form class = "login-form" action = "/login" method = "POST">
+                <input type = "text" id = "username" name = "username" placeholder = "Type in Username"><br>
+                <input type = "password" id = "password" name = "password" placeholder = "Type in Password">
+                <button type = "submit">LOGIN</button>
+            </form>
+            <p class="message"><a href="/register">アカンウトの登録</a></p>
+            </div>
+        </div>
+    </body>
+</html>
