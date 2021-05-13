@@ -50,3 +50,5 @@ CREATE TABLE TimeRecord(
 INSERT INTO users VALUES('me','s','a');
 INSERT INTO Quest VALUES('プケプケ','asa','1');
 INSERT INTO Quest VALUES('プケプ','asa','2');
+INSERT INTO ArmorSet VALUES('1','太刀','月刀　夜影','カイザー','ヴァイク','レウス','ジャナフ','ハンター','見切り４スロ３');
+INSERT INTO TimeRecord VALUES('プケプケ','太刀','5','20','2020-03-01','me','1');

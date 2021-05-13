@@ -5,6 +5,7 @@
     </head>
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
     <body>
+    {% include "navbar.html"%}
         <div class = "login-page">
             <div class = "userForms">
             <h2 style = "margin-top: 1em;">クエストリスト</h2>
@@ -39,8 +40,8 @@
              <input type = "radio" id = "弓" name="weap" value = "弓">
      
             </div>
-
             <button type = "submit" name = "submit" value = "submit">次に進む</button>
+            <button type = "submit" name = "submit" value = "prev">前に戻る</button>
             <script>
 
                 

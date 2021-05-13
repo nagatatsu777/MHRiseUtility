@@ -5,30 +5,94 @@
     </head>
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
     <body>
+    {% include "navbar.html"%}
         <div class = "login-page">
             <div class = "userForms">
             <h2 style = "margin-top: 1em;">記録情報</h2>
             <form class = "login-form" action = "/recordcr" method = "POST">
-            <div class = "userinput">
-                <label for = "weaponname"></label>
+            <div class = "userarmorinput">
+                <label for = "weaponname">武器名</label>
                 <input type = "text" class = "input" name = "weaponname" id = "weaponname">
-                <label for "helm"></label>
+                <label for "helm">頭防具</label>
                 <input type = "text" class = "input" name = "helm" id = "helm">
-                <label for = "chest"></label>
+                <label for = "chest">胴防具</label>
                 <input type = "text" class = "input" name = "chest" id = "chest">
-                <label for = "arm"></label>
+                <label for = "arm">腕防具</label>
                 <input type = "text" class = "input" name = "arm" id = "arm">
-               <label for "waist"></label>
+               <label for "waist">腰防具</label>
                 <input type = "text" class = "input" name = "waist" id = "waist">
-                <label for "leg"></label>
+                <label for "leg">脚防具</label>
                 <input type = "text" class = "input" name = "leg" id = "leg">
-                <label for "deco"></label>
+                <label for "deco">護石</label>
                 <input type = "text" class = "input" name = "deco" id = "deco">
             </div>
-
+            <div id = "past">
+            <table>
+                <tr>
+                    <th>選択肢</th>
+                    <th>武器名</th>
+                    <th>頭</th>
+                    <th>胴</th>
+                    <th>腕</th>
+                    <th>腰</th>
+                    <th>脚</th>
+                    <th>護石</th>
+                </tr>
+            {%for a in armorlist%}
+            <tr>
+            <td>
+            <input type = "radio" id = "option" name = "option" value = "{{a.id}}">
+            </td>
+            <td><input type = "hidden" id = "myweapon{{a.id}}" value = "{{a.weaponname}}">{{a.weaponname}}</td>
+            <td><input type = "hidden" id = "myhelm{{a.id}}" value = "{{a.helm}}">{{a.helm}}</td>
+            <td><input type = "hidden" id = "mychest{{a.id}}" value = "{{a.chest}}">{{a.chest}}</td>
+            <td><input type = "hidden" id = "myarm{{a.id}}" value = "{{a.arm}}">{{a.arm}}</td>
+            <td><input type = "hidden" id = "mywaist{{a.id}}" value = "{{a.waist}}">{{a.waist}}</td>
+            <td><input type = "hidden" id = "myleg{{a.id}}" value = "{{a.leg}}">{{a.leg}}</td>
+            <td><input type = "hidden" id = "mydeco{{a.id}}" value = "{{a.deco}}">{{a.deco}}</td>
+            </tr>
+            {%endfor%}
+            </table>
+            <button type = "submit" name = "submit" value = "pastarmor" onclick = "validate()">過去の装備セットをつける</button>
+            </div>
+            <div id = "usertimeinput">
+                <label for = "minute">分</label>
+                <input type = "text" class = "minute" name = "minute"id = "minute">
+                <label for = "seconds">秒</label>
+                <input type = "text" class = "seconds" name = "seconds"id = "seconds">
+            </div>
+            <div id = "danger"></div>
             <button type = "submit" name = "submit" value = "submit">記録する</button>
-            <button type = "submit" name = "submit" value = "pastarmor">過去の装備セットをつける</button>
+            <button type = "submit" name = "submit" value = "prev">前に戻る</button>
             <script>
+                function validate(){
+                    if(!(document.getElementById("option").checked)){
+                            event.preventDefault();
+                            document.getElementById("danger").innerHTML = "*Fill in information about Recommendation Letter Generic Rating*";
+                            document.getElementById("danger").style.color = "red";
+                            document.getElementById("danger").style.display = "block";
+                    }  
+                    else{
+                        event.preventDefault();
+                        let c = document.getElementById("option").value;
+                        let weap = "myweapon"+c;
+                        document.getElementById("weaponname").value = document.getElementById(weap).value;
+                        let helm = "myhelm"+c;
+                        document.getElementById("helm").value = document.getElementById(helm).value;
+                        let chest = "mychest"+c;
+                        document.getElementById("chest").value = document.getElementById(chest).value;
+                        let arm = "myarm"+c;
+                        document.getElementById("arm").value = document.getElementById(arm).value;
+                        let waist = "mywaist"+c;
+                        document.getElementById("waist").value = document.getElementById(waist).value;
+                        let leg= "myleg"+c;
+                        document.getElementById("leg").value = document.getElementById(leg).value;
+                        let deco = "mydeco"+c;
+                        document.getElementById("deco").value = document.getElementById(deco).value;
+
+                    }
+                }
+
 
                 
              </script>

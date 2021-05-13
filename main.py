@@ -5,8 +5,7 @@ app =  Flask('app')
 app.secret_key = b'xx'
 
 conn = mysql.connector.connect(
-
-
+   
 )
 
 @app.route('/')
@@ -36,7 +35,7 @@ def dashboard():
 @app.route('/ranklist',methods = ['POST','GET'])
 def ranklist():
     c = conn.cursor(dictionary = True)
-    c.execute('SELECT questrank FROM Quest GROUP BY questrank ORDER BY questrank;')
+    c.execute('SELECT questrank FROM Quest GROUP BY questrank ORDER BY questrank')
     lists = c.fetchall()
     if request.method == "POST":
         rank = int(request.form['submit'])
@@ -49,36 +48,85 @@ def ranklist():
 
 @app.route('/questlist',methods = ['GET','POST'])
 def questlist():
-    c = conn.cursor(dictionary = True)
     if request.method == 'POST':
-        questname = request.form['submit']
-        c.execute('SELECT * FROM TimeRecord WHERE questname = %s AND username = %s ORDER BY minute DESC,seconds DESC',(questname,session['username']))
+        session['questname'] = request.form['submit']
+        c = conn.cursor(dictionary = True)
+        c.execute('SELECT * FROM TimeRecord WHERE questname = %s AND username = %s ORDER BY minute DESC,seconds DESC',(session['questname'],session['username']))
         records = c.fetchall()
-        c.close()
+        c.close()      
         return render_template('record.html',records = records)
-    c.close()
+ 
     return render_template('questlist.html')
 #view record
 @app.route('/record', methods = ['POST','GET'])
 def record():
+    c = conn.cursor(dictionary = True)
+    c.execute('SELECT * FROM TimeRecord WHERE questname = %s AND username = %s ORDER BY minute DESC,seconds DESC',(session['questname'],session['username']))
+    records = c.fetchall()
     if request.method == 'POST':
         if request.form['submit'] =='create':
+            c.close()
             return render_template('recordwe.html')
+        if request.form['submit']=='prev':
+            c.execute('SELECT questrank FROM Quest WHERE questname = %s',(session['questname'],))
+            querank = c.fetchone()['questrank']
+            c.execute('SELECT * FROM Quest WHERE questrank = %s',(querank,))
+            quest = c.fetchall()
+            c.close()
+            return render_template('questlist.html',quest = quest)
+    return render_template('record.html',records = records)
 #for new record creation
 @app.route('/recordwe', methods = ['POST','GET'])
 def recordwe():
     if request.method == 'POST':
+        c = conn.cursor(dictionary = True, buffered = True)
         if request.form['submit'] == 'submit':
             session['weapon'] = request.form['weap']
-            return render_template('recordcr.html')
+            c.execute('SELECT * FROM ArmorSet WHERE weapon = %s', (session['weapon'],))
+            armorlist = c.fetchall()
+            c.close()
+            return render_template('recordcr.html',armorlist = armorlist)
+        if request.form['submit']=='prev':
+            c.execute('SELECT * FROM TimeRecord WHERE questname = %s AND username = %s ORDER BY minute DESC,seconds DESC',(session['questname'],session['username']))
+            records = c.fetchall()
+            c.close()
+            return render_template('record.html',records = records)
     return render_template('recordwe.html')
-@app.route('/recordcr')
+@app.route('/recordcr', methods = ['POST','GET'])
 def recordcr():
-    c = conn.cursor(dictionary = True)
+    c = conn.cursor(dictionary = True, buffered = True)
     c.execute('SELECT * FROM ArmorSet WHERE weapon = %s', (session['weapon'],))
     armorlist = c.fetchall()
     if request.method == 'POST':
-        return render_template('recordcr.html')
+        if request.form['submit']=='prev':
+            return redirect('/recordwe')
+        if request.form['submit']=='submit':
+            weaponname = request.form['weaponname']
+            helm = request.form['helm']
+            chest = request.form['chest']
+            arm = request.form['arm']
+            waist = request.form['waist']
+            leg = request.form['leg']
+            deco = request.form['deco']
+            minute = (int)(request.form['minute'])
+            seconds = (int)(request.form['seconds'])
+            today = date.today()
+            c.execute('SELECT * FROM ArmorSet WHERE weaponname = %s AND helm = %s AND chest = %s AND arm = %s AND waist = %s AND leg = %s AND deco = %s',(weaponname,helm,chest,arm,waist,leg,deco))
+            result = c.fetchall()
+            if result == []:
+                c.execute('INSERT INTO ArmorSet(weapon,weaponname,helm,chest,arm,waist,leg,deco) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)',(session['weapon'],weaponname,helm,chest,arm,waist,leg,deco))
+                conn.commit()
+            c.execute('SELECT id FROM ArmorSet WHERE weaponname = %s AND helm = %s AND chest = %s AND arm = %s AND waist = %s AND leg = %s AND deco = %s',(weaponname,helm,chest,arm,waist,leg,deco))
+            armorid = c.fetchone()['id']
+            c.execute('SELECT * FROM TimeRecord WHERE questname = %s AND weapon = %s AND username = %s AND armorid = %s',(session['questname'],session['weapon'],session['username'],armorid))
+            res  = c.fetchall()
+            if res == []:
+                c.execute('INSERT INTO TimeRecord(questname,weapon,minute,seconds,uploaddate,username,armorid) VALUES (%s,%s,%s,%s,%s,%s,%s)',(session['questname'],session['weapon'],minute,seconds,today,session['username'],armorid))
+                conn.commit()
+            else:
+                c.execute('UPDATE TimeRecord SET minute = %s, seconds = %s, uploaddate = %s WHERE questname = %s AND weapon = %s AND username = %s AND armorid = %s',(minute,seconds,today,session['questname'],session['weapon'],session['username'],armorid))
+
+            return redirect('/record')
     return render_template('recordcr.html',armorlist = armorlist)
 
 
