@@ -1,0 +1,39 @@
+<!DOCTYPE html> 
+<html>
+    <head>
+        <title> Login</title>
+    </head>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+    <body>
+        <div class = "login-page">
+            <div class = "userForms">
+            <h2 style = "margin-top: 1em;">記録情報</h2>
+            <form class = "login-form" action = "/recordcr" method = "POST">
+            <div class = "userinput">
+                <label for = "weaponname"></label>
+                <input type = "text" class = "input" name = "weaponname" id = "weaponname">
+                <label for "helm"></label>
+                <input type = "text" class = "input" name = "helm" id = "helm">
+                <label for = "chest"></label>
+                <input type = "text" class = "input" name = "chest" id = "chest">
+                <label for = "arm"></label>
+                <input type = "text" class = "input" name = "arm" id = "arm">
+               <label for "waist"></label>
+                <input type = "text" class = "input" name = "waist" id = "waist">
+                <label for "leg"></label>
+                <input type = "text" class = "input" name = "leg" id = "leg">
+                <label for "deco"></label>
+                <input type = "text" class = "input" name = "deco" id = "deco">
+            </div>
+
+            <button type = "submit" name = "submit" value = "submit">記録する</button>
+            <button type = "submit" name = "submit" value = "pastarmor">過去の装備セットをつける</button>
+            <script>
+
+                
+             </script>
+            </form>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html> 
+<html>
+    <head>
+        <title> Login</title>
+    </head>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+    <body>
+        <div class = "login-page">
+            <div class = "userForms">
+            <h2 style = "margin-top: 1em;">クエストリスト</h2>
+            <form class = "login-form" action = "/record" method = "POST">
+                <table>
+                    <tr>
+                        <th>武器</th>
+                        <th>分</th>
+                        <th>秒</th>
+                        <th>装備</th>
+                        <th></th>
+                    </tr>
+
+                {% for i in records%}
+                    <tr>
+                    <td> {{i.weapon}}</td>
+                    <td>{{i.minute}}</td>
+                    <td>{{i.seconds}}</td>
+                    <td>
+                    <button type = "submit" name = "submit"value = "{{i.armorid}}">装備を見る</button><br>
+                    </td>
+                    </tr>
+                {%endfor%}
+            </table>
+            <button type = "submit" name = "submit" value = "create">新しい記録を作る</button>
+    
+            <script>
+
+                
+             </script>
+            </form>
+            </div>
+        </div>
+    </body>
+</html>
