@@ -20,6 +20,8 @@ CREATE TABLE Quest(
 
 CREATE TABLE ArmorSet(
     id int not null AUTO_INCREMENT,
+    weapon varchar(30),
+    weaponname varchar(30),
     helm varchar(30),
     chest varchar(30),
     arm varchar(30),
@@ -43,7 +45,7 @@ CREATE TABLE TimeRecord(
     uploaddate date not null,
     username varchar(15),
     armorid int not null,
-    primary key(questname,weapon,username)
+    primary key(questname,weapon,username,armorid)
 );
 INSERT INTO users VALUES('me','s','a');
 INSERT INTO Quest VALUES('プケプケ','asa','1');

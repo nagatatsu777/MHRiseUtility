@@ -22,22 +22,22 @@
                  <script>
    
                     function userValidate(){         
-                     var a = document.querySelectorAll('.useryes');
-                                    var b = [];
-                                    var c = 0;
-                                    for(var i = 0; i <= a.length-1; i++){
+                     let a = document.querySelectorAll('.useryes');
+                                    let b = [];
+                                    let c = 0;
+                                    for(let i = 0; i <= a.length-1; i++){
                                             b.push(a[i].value);
                                     }
-                                    var d = document.querySelectorAll('.passyes');
-                                    var e = [];
-                                    var f = 0;
+                                    let d = document.querySelectorAll('.passyes');
+                                    let e = [];
+                                    let f = 0;
                                     
-                                    for(var i = 0; i <= d.length-1; i++){
+                                    for(let i = 0; i <= d.length-1; i++){
                                             e.push(d[i].value);
                                      }
 
                                      
-                                    for(var i = 0; i <= b.length-1; i++){
+                                    for(let i = 0; i <= b.length-1; i++){
                                         if(document.getElementById("username").value == b[i]){
                                             if(document.getElementById("password").value == e[i]){
                                                 c = 1;
