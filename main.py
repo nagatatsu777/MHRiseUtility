@@ -5,7 +5,7 @@ app = Flask('app')
 app.secret_key = b'xx'
 
 conn = mysql.connector.connect(
-
+  
 )
 
 
@@ -172,7 +172,9 @@ def viewre():
     c.execute('SELECT Quest.questname, Quest.monster, W.weap,W.minute,W.sec FROM Quest INNER JOIN(SELECT TimeRecord.questname as qn,TimeRecord.weapon as weap,min(TimeRecord.minute) as minute ,min(TimeRecord.seconds) as sec FROM TimeRecord INNER JOIN(SELECT questname,weapon,min(minute) as ma FROM TimeRecord GROUP BY questname,weapon) AS S ON S.questname = TimeRecord.questname AND S.weapon = TimeRecord.weapon AND S.ma = TimeRecord.minute GROUP BY TimeRecord.questname, TimeRecord.weapon) AS W ON Quest.questname = W.qn;')
     records = c.fetchall()
     c.close()
-
+    if request.method == 'POST':
+        if request.form['submit'] == 'prev':
+            return render_template('dashboard.html')
     return render_template('viewrecord.html', records=records)
 
 
