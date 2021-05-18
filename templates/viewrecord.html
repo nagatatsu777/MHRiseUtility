@@ -6,10 +6,10 @@
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
     <body>
     {% include "navbar.html"%}
-        <div class = "result-page">
+        <div class = "result-page" id = "result">
             <div class = "userForms">
             <h2 style = "margin-top: 1em;">記録</h2>
-            <table>
+            <table id = "result">
             <tr>
                 <th>クエスト名</th>
                 <th>モンスター名</th>

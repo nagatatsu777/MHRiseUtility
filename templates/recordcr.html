@@ -12,19 +12,19 @@
             <form class = "login-form" action = "/recordcr" method = "POST">
             <div class = "userarmorinput">
                 <label for = "weaponname">武器名</label>
-                <input type = "text" class = "input" name = "weaponname" id = "weaponname">
+                <input type = "text" class = "input" name = "weaponname" id = "weaponname" required>
                 <label for "helm">頭防具</label>
-                <input type = "text" class = "input" name = "helm" id = "helm">
+                <input type = "text" class = "input" name = "helm" id = "helm" required>
                 <label for = "chest">胴防具</label>
-                <input type = "text" class = "input" name = "chest" id = "chest">
+                <input type = "text" class = "input" name = "chest" id = "chest" required>
                 <label for = "arm">腕防具</label>
-                <input type = "text" class = "input" name = "arm" id = "arm">
+                <input type = "text" class = "input" name = "arm" id = "arm" required>
                <label for "waist">腰防具</label>
-                <input type = "text" class = "input" name = "waist" id = "waist">
+                <input type = "text" class = "input" name = "waist" id = "waist" required>
                 <label for "leg">脚防具</label>
-                <input type = "text" class = "input" name = "leg" id = "leg">
+                <input type = "text" class = "input" name = "leg" id = "leg" required>
                 <label for "deco">護石</label>
-                <input type = "text" class = "input" name = "deco" id = "deco">
+                <input type = "text" class = "input" name = "deco" id = "deco" required>
             </div>
             <div id = "past">
             <table>
@@ -57,24 +57,22 @@
             </div>
             <div id = "usertimeinput">
                 <label for = "minute">分</label>
-                <input type = "text" class = "minute" name = "minute"id = "minute">
+                <input type = "text" class = "minute" name = "minute"id = "minute" required>
                 <label for = "seconds">秒</label>
-                <input type = "text" class = "seconds" name = "seconds"id = "seconds">
+                <input type = "text" class = "seconds" name = "seconds"id = "seconds" required>
             </div>
             <div id = "danger"></div>
             <button type = "submit" name = "submit" value = "submit">記録する</button>
             <button type = "submit" name = "submit" value = "prev">前に戻る</button>
             <script>
                 function validate(){
-                    if(!(document.getElementById("option").checked)){
-                            event.preventDefault();
-                            document.getElementById("danger").innerHTML = "*Fill in information about Recommendation Letter Generic Rating*";
-                            document.getElementById("danger").style.color = "red";
-                            document.getElementById("danger").style.display = "block";
-                    }  
-                    else{
-                        event.preventDefault();
-                        let c = document.getElementById("option").value;
+                    event.preventDefault();
+                    let ele = document.getElementsByName('option');
+                    let d = 0;
+                    for(let i = 0; i<ele.length;i++){
+
+                        if(ele[i].checked){
+                        let c = ele[i].value;
                         let weap = "myweapon"+c;
                         document.getElementById("weaponname").value = document.getElementById(weap).value;
                         let helm = "myhelm"+c;
@@ -89,9 +87,11 @@
                         document.getElementById("leg").value = document.getElementById(leg).value;
                         let deco = "mydeco"+c;
                         document.getElementById("deco").value = document.getElementById(deco).value;
+                        }
 
                     }
                 }
+
 
 
                 

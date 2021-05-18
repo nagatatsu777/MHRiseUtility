@@ -1,25 +1,47 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html>
-    <head>
-        <title> Login</title>
-    </head>
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
-    <body>
+  <head>
+    <title>Login</title>
+  </head>
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="{{ url_for('static',filename='style.css') }}"
+  />
+  <body>
     {%include "navbar.html"%}
-        <div class = "login-page">
-            <div class = "userForms">
-            <h2 style = "margin-top: 1em;">クエストリスト</h2>
-            <form class = "login-form" action = "/ranklist" method = "POST" onsubmit = "userValidate()">
-                {% for i in lists%}
-                    <button type = "submit" name = "submit"value = "{{i.questrank}}">{{i.questrank}}</button><br>
-                {%endfor%}
-    
-                 <script>
+    <div class="login-page">
+      <div class="quest">
+        <h2 class="questli">クエストリスト</h2>
+        <form class="login-form" action="/ranklist" method="POST">
+          {% for i in lists%}
+          <button
+            type="submit"
+            id="questrank"
+            class="questrank"
+            name="submit"
+            value="{{i.questrank}}"
+          >
+            <p style = "text-align:left;">Lv.</p><div id="stars{{i.questrank}}"></div></button
+          ><br />
+          {%endfor%}
 
-                
-             </script>
-            </form>
-            </div>
-        </div>
-    </body>
+          <script>
+            window.onload = function image() {
+              event.preventDefault();
+              let a = document.querySelectorAll(".questrank");
+              for (let j = 0; j <= a.length - 1; j++) {
+                let s = '';
+                for (let i = 0; i < a[j].value; i++) {
+                  s +=
+                    "<img class = \"starimage\" align = \"left\"src = \"{{ url_for('static', filename = 'star.png')}}\" style = \"width:2em;height:2em;\">";
+                }
+                document.getElementById("stars" + a[j].value).innerHTML = s;
+              }
+            }
+          </script>
+        </form>
+      </div>
+    </div>
+  </body>
 </html>

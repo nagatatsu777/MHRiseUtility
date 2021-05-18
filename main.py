@@ -5,7 +5,7 @@ app = Flask('app')
 app.secret_key = b'xx'
 
 conn = mysql.connector.connect(
-  
+
 )
 
 

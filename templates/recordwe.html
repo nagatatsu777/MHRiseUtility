@@ -1,55 +1,81 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html>
-    <head>
-        <title> Login</title>
-    </head>
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
-    <body>
+  <head>
+    <title>Login</title>
+  </head>
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="{{ url_for('static',filename='style.css') }}"
+  />
+  <body>
     {% include "navbar.html"%}
-        <div class = "login-page">
-            <div class = "userForms">
-            <h2 style = "margin-top: 1em;">クエストリスト</h2>
-            <form class = "login-form" action = "/recordwe" method = "POST">
-            <div class = "weapon">
+    <div class="login-page">
+      <div class="userForms">
+        <h2 style="margin-top: 1em">クエストリスト</h2>
+        <form class="login-form" action="/recordwe" method="POST">
+          <div class="weapon">
             どの武器で記録しますか？（下記から選んでください）
-             <label for = "大剣">大剣</label>
-             <input type = "radio" id = "大剣" name="weap" value = "大剣">
-             <label for  = "太刀">太刀</label>
-            <input type = "radio" id = "太刀"  name="weap" value = "太刀">
-            <label for = "片手剣">片手剣</label>
-             <input type = "radio" id = "片手剣" name="weap" value = "片手剣">
-             <label for  = "双剣">双剣</label>
-            <input type = "radio" id = "双剣"  name="weap" value = "双剣">
-            <label for = "ランス">ランス</label>
-             <input type = "radio" id = "ランス" name="weap" value = "ランス">
-             <label for  = "ガンランス">ガンランス</label>
-            <input type = "radio" id = "ガンランス"  name="weap" value = "ガンランス">
-            <label for = "ハンマー">ハンマー</label>
-             <input type = "radio" id = "ハンマー" name="weap" value = "ハンマー">
-             <label for = "狩猟笛">狩猟笛</label>
-             <input type = "radio" id = "狩猟笛" name="weap" value = "狩猟笛">
-             <label for  = "操虫棍">操虫棍</label>
-            <input type = "radio" id = "操虫棍"  name="weap" value = "操虫棍">
-            <label for = "スラッシュアックス">スラッシュアックス</label>
-             <input type = "radio" id = "スラッシュアックス" name="weap" value = "スラッシュアックス">
-             <label for  = "チャージアックス">チャージアックス</label>
-            <input type = "radio" id = "チャージアックス"  name="weap" value = "チャージアックス">
-            <label for = "ライトボウガン">ライトボウガン</label>
-             <input type = "radio" id = "ライトボウガン" name="weap" value = "ライトボウガン">
-             <label for  = "ヘビィボウガン">ヘビィボウガン</label>
-            <input type = "radio" id = "ヘビィボウガン"  name="weap" value = "ヘビィボウガン">
-            <label for = "弓">弓</label>
-             <input type = "radio" id = "弓" name="weap" value = "弓">
-     
-            </div>
-            <button type = "submit" name = "submit" value = "submit">次に進む</button>
-            <button type = "submit" name = "submit" value = "prev">前に戻る</button>
-            <script>
-
-                
-             </script>
-            </form>
-            </div>
-        </div>
-    </body>
+            <br />
+            <label for="大剣">大剣</label>
+            <input type="radio" id="大剣" name="weap" value="大剣" required />
+            <label for="太刀">太刀</label>
+            <input type="radio" id="太刀" name="weap" value="太刀" />
+            <label for="片手剣">片手剣</label>
+            <input type="radio" id="片手剣" name="weap" value="片手剣" />
+            <label for="双剣">双剣</label>
+            <input type="radio" id="双剣" name="weap" value="双剣" />
+            <label for="ランス">ランス</label>
+            <input type="radio" id="ランス" name="weap" value="ランス" />
+            <label for="ガンランス">ガンランス</label>
+            <input
+              type="radio"
+              id="ガンランス"
+              name="weap"
+              value="ガンランス"
+            />
+            <label for="ハンマー">ハンマー</label>
+            <input type="radio" id="ハンマー" name="weap" value="ハンマー" />
+            <label for="狩猟笛">狩猟笛</label>
+            <input type="radio" id="狩猟笛" name="weap" value="狩猟笛" />
+            <label for="操虫棍">操虫棍</label>
+            <input type="radio" id="操虫棍" name="weap" value="操虫棍" />
+            <label for="スラッシュアックス">スラッシュアックス</label>
+            <input
+              type="radio"
+              id="スラッシュアックス"
+              name="weap"
+              value="スラッシュアックス"
+            />
+            <label for="チャージアックス">チャージアックス</label>
+            <input
+              type="radio"
+              id="チャージアックス"
+              name="weap"
+              value="チャージアックス"
+            />
+            <label for="ライトボウガン">ライトボウガン</label>
+            <input
+              type="radio"
+              id="ライトボウガン"
+              name="weap"
+              value="ライトボウガン"
+            />
+            <label for="ヘビィボウガン">ヘビィボウガン</label>
+            <input
+              type="radio"
+              id="ヘビィボウガン"
+              name="weap"
+              value="ヘビィボウガン"
+            />
+            <label for="弓">弓</label>
+            <input type="radio" id="弓" name="weap" value="弓" />
+          </div>
+          <button type="submit" name="submit" value="submit">次に進む</button>
+          <button type="submit" name="submit" value="prev">前に戻る</button>
+          <script></script>
+        </form>
+      </div>
+    </div>
+  </body>
 </html>

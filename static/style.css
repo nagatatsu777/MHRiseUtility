@@ -1,14 +1,17 @@
 body {
-  background-color: rgb(224, 187, 117);
-  margin-top: 5em;
+  background-color: rgb(253, 231, 183);
+  color: rgb(83, 80, 80);
+}
+.questli {
+  margin: 1 em;
+  color: black;
 }
 .login-page {
-  width: 360px;
+  width: 50em;
   padding: 1em 1em 1em;
   margin: auto;
-  background-color: rgb(205, 235, 205);
+  background-color: rgb(255, 254, 189);
 }
-
 .result-page {
   width: 55em;
   padding: 1em 1em 1em;
@@ -31,7 +34,7 @@ body {
   font-family: "Roboto", sans-serif;
   text-transform: uppercase;
   outline: 0;
-  background: #106eea;
+  background: #5638c5;
   width: 100%;
   border: 0;
   padding: 15px;
@@ -46,4 +49,42 @@ body {
 .form button:focus {
   background-color: #ddd;
   color: black;
+}
+.quest button {
+  background: rgb(77, 70, 70);
+  width: 100%;
+  padding: 1em;
+  color: white;
+}
+.quest button:hover,
+.quest button:active,
+.quest button:focus {
+  background: rgb(175, 127, 72);
+}
+#result {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#result td,
+#result th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#result tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+#result tr:hover {
+  background-color: #ddd;
+}
+
+#result th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4caf50;
+  color: white;
 }
