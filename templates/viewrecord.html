@@ -4,6 +4,7 @@
         <title> Login</title>
     </head>
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+    <form action = "/viewrecord" method = "post">
     <body>
     {% include "navbar.html"%}
         <div class = "result-page" id = "result">
@@ -27,34 +28,6 @@
             </table>
             <button type = "submit" name = "submit" value = "prev">前に戻る</button>
             <script>
-                function validate(){
-                    if(!(document.getElementById("option").checked)){
-                            event.preventDefault();
-                            document.getElementById("danger").innerHTML = "*Fill in information about Recommendation Letter Generic Rating*";
-                            document.getElementById("danger").style.color = "red";
-                            document.getElementById("danger").style.display = "block";
-                    }  
-                    else{
-                        event.preventDefault();
-                        let c = document.getElementById("option").value;
-                        let weap = "myweapon"+c;
-                        document.getElementById("weaponname").value = document.getElementById(weap).value;
-                        let helm = "myhelm"+c;
-                        document.getElementById("helm").value = document.getElementById(helm).value;
-                        let chest = "mychest"+c;
-                        document.getElementById("chest").value = document.getElementById(chest).value;
-                        let arm = "myarm"+c;
-                        document.getElementById("arm").value = document.getElementById(arm).value;
-                        let waist = "mywaist"+c;
-                        document.getElementById("waist").value = document.getElementById(waist).value;
-                        let leg= "myleg"+c;
-                        document.getElementById("leg").value = document.getElementById(leg).value;
-                        let deco = "mydeco"+c;
-                        document.getElementById("deco").value = document.getElementById(deco).value;
-
-                    }
-                }
-
 
              </script>
             </form>

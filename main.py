@@ -1,9 +1,14 @@
+import matplotlib.pyplot as plt
 from flask import Flask, session, redirect, render_template, request
 import mysql.connector
 from datetime import date
+import matplotlib
+matplotlib.use('Agg')
 app = Flask('app')
 app.secret_key = b'xx'
-
+UPLOAD_FOLDER = ""
+# save path
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 conn = mysql.connector.connect(
 
 )
@@ -43,7 +48,7 @@ def dashboard():
             return render_template('ranklist.html', lists=lists)
         if request.form['submit'] == 'export':
             c = conn.cursor(dictionary=True)
-            c.execute('SELECT Quest.questname, Quest.monster, W.weap,W.minute,W.sec FROM Quest INNER JOIN(SELECT TimeRecord.questname as qn,TimeRecord.weapon as weap,min(TimeRecord.minute) as minute ,min(TimeRecord.seconds) as sec FROM TimeRecord INNER JOIN(SELECT questname,weapon,min(minute) as ma FROM TimeRecord GROUP BY questname,weapon) AS S ON S.questname = TimeRecord.questname AND S.weapon = TimeRecord.weapon AND S.ma = TimeRecord.minute GROUP BY TimeRecord.questname, TimeRecord.weapon) AS W ON Quest.questname = W.qn;')
+            c.execute('SELECT Quest.questname, Quest.monster, W.weap,W.minute,W.sec FROM Quest INNER JOIN(SELECT TimeRecord.questname as qn,TimeRecord.weapon as weap,min(TimeRecord.minute) as minute ,min(TimeRecord.seconds) as sec FROM TimeRecord INNER JOIN(SELECT questname,weapon,min(minute) as ma FROM TimeRecord GROUP BY questname,weapon) AS S ON S.questname = TimeRecord.questname AND S.weapon = TimeRecord.weapon AND S.ma = TimeRecord.minute GROUP BY TimeRecord.questname, TimeRecord.weapon ORDER BY minute ASC, sec ASC) AS W ON Quest.questname = W.qn;')
             records = c.fetchall()
             c.close()
             return render_template('viewrecord.html', records=records)
@@ -70,13 +75,35 @@ def questlist():
     if request.method == 'POST':
         session['questname'] = request.form['submit']
         c = conn.cursor(dictionary=True)
-        c.execute('SELECT * FROM TimeRecord WHERE questname = %s AND username = %s ORDER BY minute DESC,seconds DESC',
+        c.execute('SELECT * FROM TimeRecord WHERE questname = %s AND username = %s ORDER BY minute ASC,seconds ASC',
                   (session['questname'], session['username']))
         records = c.fetchall()
+        c.execute('SELECT Quest.monster, W.weap,W.minute,W.sec FROM Quest INNER JOIN(SELECT TimeRecord.questname as qn,TimeRecord.weapon as weap,min(TimeRecord.minute) as minute ,min(TimeRecord.seconds) as sec FROM TimeRecord INNER JOIN(SELECT questname,weapon,min(minute) as ma FROM TimeRecord GROUP BY questname,weapon) AS S ON S.questname = TimeRecord.questname AND S.weapon = TimeRecord.weapon AND S.ma = TimeRecord.minute GROUP BY TimeRecord.questname, TimeRecord.weapon) AS W ON Quest.questname = W.qn WHERE Quest.questname= %s ORDER BY W.minute ASC, W.sec ASC  LIMIT 1;',
+                  (session['questname'],))
+        fastest = c.fetchone()
+        c.execute('SELECT TimeRecord.weapon as weap,min(TimeRecord.minute) as minute ,min(TimeRecord.seconds) as sec FROM TimeRecord INNER JOIN(SELECT questname,weapon,min(minute) as ma FROM TimeRecord GROUP BY questname,weapon) AS S ON S.questname = TimeRecord.questname AND S.weapon = TimeRecord.weapon AND S.ma = TimeRecord.minute GROUP BY TimeRecord.questname, TimeRecord.weapon HAVING questname = %s;',
+                  (session['questname'],))
+        x = []
+        tick_label = []
+        y = []
+        i = 0
+        graphrecords = c.fetchall()
+        for s in graphrecords:
+            i += 1
+            x.append(i)
+            tick_label.append(s['weap'])
+            y.append(s['minute']*60+s['sec'])
+        plt.bar(x, y, tick_label=tick_label, width=0.8, color=['red', 'green'])
+        plt.xlabel('武器')
+        plt.ylabel('タイム　（秒）')
+        plt.title('記録表')
+        plt.xticks(rotation=270, fontsize=7)
+        plt.savefig(app.config['UPLOAD_FOLDER']+session['questname'])
+        plt.close()
         c.close()
-        return render_template('record.html', records=records)
+        return render_template('record.html', records=records, fastest=fastest)
 
-    return render_template('questlist.html')
+    return render_template('dashboard.html')
 # view record
 
 
@@ -86,6 +113,28 @@ def record():
     c.execute('SELECT * FROM TimeRecord WHERE questname = %s AND username = %s ORDER BY minute DESC,seconds DESC',
               (session['questname'], session['username']))
     records = c.fetchall()
+    c.execute('SELECT Quest.monster, W.weap,W.minute,W.sec FROM Quest INNER JOIN(SELECT TimeRecord.questname as qn,TimeRecord.weapon as weap,min(TimeRecord.minute) as minute ,min(TimeRecord.seconds) as sec FROM TimeRecord INNER JOIN(SELECT questname,weapon,min(minute) as ma FROM TimeRecord GROUP BY questname,weapon) AS S ON S.questname = TimeRecord.questname AND S.weapon = TimeRecord.weapon AND S.ma = TimeRecord.minute GROUP BY TimeRecord.questname, TimeRecord.weapon) AS W ON Quest.questname = W.qn WHERE Quest.questname= %s ORDER BY W.minute ASC, W.sec ASC  LIMIT 1;',
+              (session['questname'],))
+    fastest = c.fetchone()
+    c.execute('SELECT TimeRecord.weapon as weap,min(TimeRecord.minute) as minute ,min(TimeRecord.seconds) as sec FROM TimeRecord INNER JOIN(SELECT questname,weapon,min(minute) as ma FROM TimeRecord GROUP BY questname,weapon) AS S ON S.questname = TimeRecord.questname AND S.weapon = TimeRecord.weapon AND S.ma = TimeRecord.minute GROUP BY TimeRecord.questname, TimeRecord.weapon HAVING questname = %s;',
+              (session['questname'],))
+    x = []
+    tick_label = []
+    y = []
+    i = 0
+    graphrecords = c.fetchall()
+    for s in graphrecords:
+        i += 1
+        x.append(i)
+        tick_label.append(s['weap'])
+        y.append(s['minute']*60+s['sec'])
+    plt.bar(x, y, tick_label=tick_label, width=0.8, color=['red', 'green'])
+    plt.xlabel('武器')
+    plt.ylabel('タイム　（秒）')
+    plt.title('記録表')
+    plt.xticks(rotation=270, fontsize=7)
+    plt.savefig(app.config['UPLOAD_FOLDER']+session['questname'])
+    plt.close()
     if request.method == 'POST':
         if request.form['submit'] == 'create':
             c.close()
@@ -98,7 +147,13 @@ def record():
             quest = c.fetchall()
             c.close()
             return render_template('questlist.html', quest=quest)
-    return render_template('record.html', records=records)
+        id = (int)(request.form['submit'])
+        c.execute('SELECT * FROM ArmorSet WHERE id = %s', (id,))
+        armor = c.fetchone()
+        c.close()
+        return render_template('armorset.html', armor=armor)
+    c.close()
+    return render_template('record.html', records=records, fastest=fastest)
 # for new record creation
 
 
@@ -117,8 +172,11 @@ def recordwe():
             c.execute('SELECT * FROM TimeRecord WHERE questname = %s AND username = %s ORDER BY minute DESC,seconds DESC',
                       (session['questname'], session['username']))
             records = c.fetchall()
+            c.execute('SELECT Quest.monster, W.weap,W.minute,W.sec FROM Quest INNER JOIN(SELECT TimeRecord.questname as qn,TimeRecord.weapon as weap,min(TimeRecord.minute) as minute ,min(TimeRecord.seconds) as sec FROM TimeRecord INNER JOIN(SELECT questname,weapon,min(minute) as ma FROM TimeRecord GROUP BY questname,weapon) AS S ON S.questname = TimeRecord.questname AND S.weapon = TimeRecord.weapon AND S.ma = TimeRecord.minute GROUP BY TimeRecord.questname, TimeRecord.weapon) AS W ON Quest.questname = W.qn WHERE Quest.questname= %s ORDER BY W.minute ASC, W.sec ASC  LIMIT 1;',
+                      (session['questname'],))
+            fastest = c.fetchone()
             c.close()
-            return render_template('record.html', records=records)
+            return render_template('record.html', records=records, fastest=fastest)
     return render_template('recordwe.html')
 
 
@@ -176,6 +234,22 @@ def viewre():
         if request.form['submit'] == 'prev':
             return render_template('dashboard.html')
     return render_template('viewrecord.html', records=records)
+
+
+@app.route('/armorset', methods=['POST', 'GET'])
+def armorset():
+
+    if request.method == 'POST':
+        if request.form['submit'] == 'prev':
+            c = conn.cursor(dictionary=True)
+            c.execute('SELECT * FROM TimeRecord WHERE questname = %s AND username = %s ORDER BY minute DESC,seconds DESC',
+                      (session['questname'], session['username']))
+            records = c.fetchall()
+            c.execute('SELECT Quest.monster, W.weap,W.minute,W.sec FROM Quest INNER JOIN(SELECT TimeRecord.questname as qn,TimeRecord.weapon as weap,min(TimeRecord.minute) as minute ,min(TimeRecord.seconds) as sec FROM TimeRecord INNER JOIN(SELECT questname,weapon,min(minute) as ma FROM TimeRecord GROUP BY questname,weapon) AS S ON S.questname = TimeRecord.questname AND S.weapon = TimeRecord.weapon AND S.ma = TimeRecord.minute GROUP BY TimeRecord.questname, TimeRecord.weapon) AS W ON Quest.questname = W.qn WHERE Quest.questname= %s ORDER BY W.minute ASC, W.sec ASC  LIMIT 1;',
+                      (session['questname'],))
+            fastest = c.fetchone()
+            c.close()
+            return render_template('record.html', records=records, fastest=fastest)
 
 
 app.run(host='0.0.0.0', port=8080)

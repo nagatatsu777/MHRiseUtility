@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>QuestList</title>
+  </head>
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="{{ url_for('static',filename='style.css')}}"
+  />
+  {%include "navbar.html"%}
+  <body>
+    <div class="login-page">
+      <div class="quest">
+        <form action="/armorset" method="POST">
+          <h1 class = "header">{{armor.weapon}}</h1>
+          <h2 class = "list">{{armor.weaponname}}</h2>
+          <h2 class = "list"> {{armor.helm}}</h2>
+          <h2 class = "list">{{armor.chest}}</h2>
+          <h2 class = "list">{{armor.arm}}</h2>
+          <h2 class = "list">{{armor.waist}}</h2>
+          <h2 class = "list">{{armor.leg}}</h2>
+          <h2 class = "list">{{armor.deco}}</h2>
+          <button type="submit" name="submit" value="prev">前に戻る</button>
+          <script></script>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

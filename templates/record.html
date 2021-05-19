@@ -11,7 +11,19 @@
   <body>
     <div class="login-page">
       <div class="userForms">
-        <h2 style="margin-top: 1em">クエスト</h2>
+        <h1 style="margin-top: 1em">
+          {{records[0].questname}} ( {{fastest.monster}})
+          <div id="fastestrecord">
+            最速記録<br />
+            Time: {{fastest.minute}} : {{fastest.sec}}<br />
+            {{fastest.weap}}
+          </div>
+        </h1>
+        <img
+          class="recordgraph"
+          src="{{ url_for('static', filename = session['questname']+'.png')}}"
+          style="width: 500px; height: 500px"
+        />
         <form class="login-form" action="/record" method="POST">
           <table id="result">
             <tr>

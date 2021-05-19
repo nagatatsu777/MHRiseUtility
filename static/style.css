@@ -1,6 +1,6 @@
 body {
   background-color: rgb(253, 231, 183);
-  color: rgb(83, 80, 80);
+  color: rgb(0, 0, 0);
 }
 .questli {
   margin: 1 em;
@@ -38,6 +38,7 @@ body {
   width: 100%;
   border: 0;
   padding: 15px;
+  margin: 1 em;
   color: #ffffff;
   font-size: 14px;
   -webkit-transition: all 0.3 ease;
@@ -87,4 +88,23 @@ body {
   text-align: left;
   background-color: #4caf50;
   color: white;
+}
+.list {
+  color: black;
+  margin: 1 em;
+}
+.header {
+  color: orange;
+  margin: 2 em;
+}
+#fastestrecord {
+  text-align: right;
+  border-style: ridge;
+  margin-left: 80%;
+  width: 150px;
+  height: 200 px;
+  color: red;
+  background-color: black;
+  font-size: 20px;
+  text-align: center;
 }
