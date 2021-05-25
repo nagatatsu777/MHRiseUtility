@@ -8,35 +8,35 @@
     {% include "navbar.html"%}
         <div class = "login-page">
             <div class = "userForms">
-            <h2 style = "margin-top: 1em;">記録情報</h2>
+            <h2 style = "margin-top: 1em;">{%if session['language'] == 'Japanese'%}入力情報{%endif%}{%if session['language'] == 'English'%}Information to add{%endif%}</h2>
             <form class = "login-form" action = "/recordcr" method = "POST">
             <div class = "userarmorinput">
-                <label for = "weaponname">武器名</label>
+                <label for = "weaponname">{%if session['language'] == 'Japanese'%}武器名{%endif%}{%if session['language'] == 'English'%}Weapon　Name{%endif%}</label>
                 <input type = "text" class = "input" name = "weaponname" id = "weaponname" required>
-                <label for "helm">頭防具</label>
+                <label for "helm">{%if session['language'] == 'Japanese'%}頭防具{%endif%}{%if session['language'] == 'English'%}Helm{%endif%}</label>
                 <input type = "text" class = "input" name = "helm" id = "helm" required>
-                <label for = "chest">胴防具</label>
+                <label for = "chest">{%if session['language'] == 'Japanese'%}胴防具{%endif%}{%if session['language'] == 'English'%}Chest{%endif%}</label>
                 <input type = "text" class = "input" name = "chest" id = "chest" required>
-                <label for = "arm">腕防具</label>
+                <label for = "arm">{%if session['language'] == 'Japanese'%}腕防具{%endif%}{%if session['language'] == 'English'%}Arm{%endif%}</label>
                 <input type = "text" class = "input" name = "arm" id = "arm" required>
-               <label for "waist">腰防具</label>
+               <label for "waist">{%if session['language'] == 'Japanese'%}腰防具{%endif%}{%if session['language'] == 'English'%}Waist{%endif%}</label>
                 <input type = "text" class = "input" name = "waist" id = "waist" required>
-                <label for "leg">脚防具</label>
+                <label for "leg">{%if session['language'] == 'Japanese'%}脚防具{%endif%}{%if session['language'] == 'English'%}Leg{%endif%}</label>
                 <input type = "text" class = "input" name = "leg" id = "leg" required>
-                <label for "deco">護石</label>
+                <label for "deco">{%if session['language'] == 'Japanese'%}護石{%endif%}{%if session['language'] == 'English'%}Charm{%endif%}</label>
                 <input type = "text" class = "input" name = "deco" id = "deco" required>
             </div>
             <div id = "past">
             <table>
                 <tr>
-                    <th>選択肢</th>
-                    <th>武器名</th>
-                    <th>頭</th>
-                    <th>胴</th>
-                    <th>腕</th>
-                    <th>腰</th>
-                    <th>脚</th>
-                    <th>護石</th>
+                    <th>{%if session['language'] == 'Japanese'%}選択肢{%endif%}{%if session['language'] == 'English'%}Options{%endif%}</th>
+                    <th>{%if session['language'] == 'Japanese'%}武器名{%endif%}{%if session['language'] == 'English'%}Weapon　Name{%endif%}</th>
+                    <th>{%if session['language'] == 'Japanese'%}頭{%endif%}{%if session['language'] == 'English'%}Helm{%endif%}</th>
+                    <th>{%if session['language'] == 'Japanese'%}胴{%endif%}{%if session['language'] == 'English'%}Chest{%endif%}</th>
+                    <th>{%if session['language'] == 'Japanese'%}腕{%endif%}{%if session['language'] == 'English'%}Arm{%endif%}</th>
+                    <th>{%if session['language'] == 'Japanese'%}腰{%endif%}{%if session['language'] == 'English'%}Waist{%endif%}</th>
+                    <th>{%if session['language'] == 'Japanese'%}脚{%endif%}{%if session['language'] == 'English'%}Leg{%endif%}</th>
+                    <th>{%if session['language'] == 'Japanese'%}護石{%endif%}{%if session['language'] == 'English'%}Charm{%endif%}</th>
                 </tr>
             {%for a in armorlist%}
             <tr>
@@ -53,17 +53,17 @@
             </tr>
             {%endfor%}
             </table>
-            <button type = "submit" name = "submit" value = "pastarmor" onclick = "validate()">過去の装備セットをつける</button>
+            <button type = "submit" name = "submit" value = "pastarmor" onclick = "validate()">{%if session['language']=='Japanese'%}過去の装備セットをつける{%endif%}{%if session['language']=='English'%}Input the armor set selected{%endif%}</button>
             </div>
             <div id = "usertimeinput">
-                <label for = "minute">分</label>
+                <label for = "minute">{%if session['language'] == 'Japanese'%}分{%endif%}{%if session['language'] == 'English'%}Minutes{%endif%}</label>
                 <input type = "text" class = "minute" name = "minute"id = "minute" required>
-                <label for = "seconds">秒</label>
+                <label for = "seconds">{%if session['language'] == 'Japanese'%}秒{%endif%}{%if session['language'] == 'English'%}Seconds{%endif%}</label>
                 <input type = "text" class = "seconds" name = "seconds"id = "seconds" required>
             </div>
             <div id = "danger"></div>
-            <button type = "submit" name = "submit" value = "submit">記録する</button>
-            <button type = "submit" name = "submit" value = "prev">前に戻る</button>
+            <button type = "submit" name = "submit" value = "submit">{%if session['language'] == 'Japanese'%}記録する{%endif%}{%if session['language'] == 'English'%}Record the information{%endif%}</button>
+            <button type = "submit" name = "submit" value = "prev">{%if session['language'] == 'Japanese'%}前に戻る{%endif%}{%if session['language'] == 'English'%}Go back to the previous page{%endif%}</button>
             <script>
                 function validate(){
                     event.preventDefault();

@@ -19,6 +19,7 @@ def first():
     c = conn.cursor(dictionary=True)
     c.execute('SELECT * FROM Users')
     info = c.fetchall()
+    session['language'] = 'Japanese'
     c.close()
     return render_template("index.html", info=info)
 
@@ -26,18 +27,31 @@ def first():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        session['username'] = request.form['username']
-        session['password'] = request.form['password']
-        c = conn.cursor(buffered=True)
-        c.execute('SELECT userrole FROM Users WHERE username = %s',
-                  (session['username'],))
-        session['userrole'] = c.fetchone()[0]
-        print(session['userrole'])
+        # For changing language
+        if request.form['submit'] == 'change':
+            c = conn.cursor(dictionary=True)
+            c.execute('SELECT * FROM Users')
+            info = c.fetchall()
+            c.close()
+            if session['language'] == 'Japanese':
+                session['language'] = 'English'
+            else:
+                session['language'] = 'Japanese'
+            return render_template("index.html", info=info)
+        if request.form['submit'] == 'submit':
+            session['username'] = request.form['username']
+            session['password'] = request.form['password']
+            c = conn.cursor(buffered=True)
+            c.execute('SELECT userrole FROM Users WHERE username = %s',
+                      (session['username'],))
+            session['userrole'] = c.fetchone()[0]
+            print(session['userrole'])
     return render_template("dashboard.html")
 
 
 @app.route('/dashboard', methods=['POST', 'GET'])
 def dashboard():
+
     if request.method == 'POST':
         if request.form['submit'] == 'record':
             c = conn.cursor(dictionary=True)
@@ -50,8 +64,47 @@ def dashboard():
             c = conn.cursor(dictionary=True)
             c.execute('SELECT Quest.questname, Quest.monster, W.weap,W.minute,W.sec FROM Quest INNER JOIN(SELECT TimeRecord.questname as qn,TimeRecord.weapon as weap,min(TimeRecord.minute) as minute ,min(TimeRecord.seconds) as sec FROM TimeRecord INNER JOIN(SELECT questname,weapon,min(minute) as ma FROM TimeRecord GROUP BY questname,weapon) AS S ON S.questname = TimeRecord.questname AND S.weapon = TimeRecord.weapon AND S.ma = TimeRecord.minute GROUP BY TimeRecord.questname, TimeRecord.weapon ORDER BY minute ASC, sec ASC) AS W ON Quest.questname = W.qn;')
             records = c.fetchall()
+            # Window function example
+            c.execute('SELECT Quest.questname, Quest.monster, W.weap,W.minute,W.seconds FROM Quest INNER JOIN (SELECT distinct weapon as weap ,questname,minute,seconds, COUNT(weapon) OVER(PARTITION BY weapon,questname ORDER BY minute, seconds) as countrank FROM TimeRecord) as W ON Quest.questname = W.questname WHERE W.countrank = 1;')
+            weaprecords = c.fetchall()
+            # Make the pie chart of the ratio of weapons ranking the top
+            c.execute('SELECT W.weap as we, COUNT(W.weap) as toprank FROM TimeRecord INNER JOIN (SELECT distinct weapon as weap ,questname,minute,seconds, COUNT(weapon) OVER(PARTITION BY questname ORDER BY minute, seconds) as countrank FROM TimeRecord) as W ON W.questname = TimeRecord.questname AND TimeRecord.weapon = W.weap WHERE W.countrank = 1 GROUP BY W.weap;')
+            data = []
+            label = []
+            graphrecords = c.fetchall()
+            for s in graphrecords:
+                data.append(s['toprank'])
+                label.append(
+                    s['we']+': TopTotal( ' + str(s['toprank'])+' )')
+            plt.pie(data, labels=label, shadow=True)
+            plt.savefig(app.config['UPLOAD_FOLDER'] +
+                        session['username']+'piechart', bbox_inches='tight')
+            plt.close()
+            # Make the bar graph of the average time of each weapon
+            c.execute('SELECT W.weap, AVG(W.minute*60+W.seconds) as average FROM TimeRecord INNER JOIN (SELECT distinct weapon as weap ,questname,minute,seconds, COUNT(weapon) OVER(PARTITION BY questname ORDER BY minute, seconds) as countrank FROM TimeRecord) as W ON W.questname = TimeRecord.questname AND TimeRecord.weapon = W.weap GROUP BY W.weap;')
+            avgrecords = c.fetchall()
+            avgdata = []
+            label = []
+            x = []
+            i = 0
+            for a in avgrecords:
+                i += 1
+                avgdata.append(a['average'])
+                label.append(a['weap'])
+                x.append(i)
+            plt.bar(x, avgdata, tick_label=label,
+                    width=0.8, color=['red', 'green'])
+            plt.xlabel('武器')
+            plt.ylabel('タイム　（秒）')
+            plt.title('平均記録表')
+            plt.xticks(rotation=270, fontsize=7)
+            plt.savefig(app.config['UPLOAD_FOLDER'] +
+                        session['username']+'average')
+            plt.close()
             c.close()
-            return render_template('viewrecord.html', records=records)
+            return render_template('viewrecord.html', records=records, weaprecords=weaprecords)
+        if request.form['submit'] == 'addque':
+            return render_template('addquest.html')
     return render_template('dashboard.html')
 
 
@@ -78,7 +131,7 @@ def questlist():
         c.execute('SELECT * FROM TimeRecord WHERE questname = %s AND username = %s ORDER BY minute ASC,seconds ASC',
                   (session['questname'], session['username']))
         records = c.fetchall()
-        c.execute('SELECT Quest.monster, W.weap,W.minute,W.sec FROM Quest INNER JOIN(SELECT TimeRecord.questname as qn,TimeRecord.weapon as weap,min(TimeRecord.minute) as minute ,min(TimeRecord.seconds) as sec FROM TimeRecord INNER JOIN(SELECT questname,weapon,min(minute) as ma FROM TimeRecord GROUP BY questname,weapon) AS S ON S.questname = TimeRecord.questname AND S.weapon = TimeRecord.weapon AND S.ma = TimeRecord.minute GROUP BY TimeRecord.questname, TimeRecord.weapon) AS W ON Quest.questname = W.qn WHERE Quest.questname= %s ORDER BY W.minute ASC, W.sec ASC  LIMIT 1;',
+        c.execute('SELECT Quest.questname, Quest.monster, W.weap,W.minute,W.sec FROM Quest INNER JOIN(SELECT TimeRecord.questname as qn,TimeRecord.weapon as weap,min(TimeRecord.minute) as minute ,min(TimeRecord.seconds) as sec FROM TimeRecord INNER JOIN(SELECT questname,weapon,min(minute) as ma FROM TimeRecord GROUP BY questname,weapon) AS S ON S.questname = TimeRecord.questname AND S.weapon = TimeRecord.weapon AND S.ma = TimeRecord.minute GROUP BY TimeRecord.questname, TimeRecord.weapon) AS W ON Quest.questname = W.qn WHERE Quest.questname= %s ORDER BY W.minute ASC, W.sec ASC  LIMIT 1;',
                   (session['questname'],))
         fastest = c.fetchone()
         c.execute('SELECT TimeRecord.weapon as weap,min(TimeRecord.minute) as minute ,min(TimeRecord.seconds) as sec FROM TimeRecord INNER JOIN(SELECT questname,weapon,min(minute) as ma FROM TimeRecord GROUP BY questname,weapon) AS S ON S.questname = TimeRecord.questname AND S.weapon = TimeRecord.weapon AND S.ma = TimeRecord.minute GROUP BY TimeRecord.questname, TimeRecord.weapon HAVING questname = %s;',
@@ -229,11 +282,13 @@ def viewre():
     c = conn.cursor(dictionary=True)
     c.execute('SELECT Quest.questname, Quest.monster, W.weap,W.minute,W.sec FROM Quest INNER JOIN(SELECT TimeRecord.questname as qn,TimeRecord.weapon as weap,min(TimeRecord.minute) as minute ,min(TimeRecord.seconds) as sec FROM TimeRecord INNER JOIN(SELECT questname,weapon,min(minute) as ma FROM TimeRecord GROUP BY questname,weapon) AS S ON S.questname = TimeRecord.questname AND S.weapon = TimeRecord.weapon AND S.ma = TimeRecord.minute GROUP BY TimeRecord.questname, TimeRecord.weapon) AS W ON Quest.questname = W.qn;')
     records = c.fetchall()
+    c.execute('SELECT Quest.questname, Quest.monster, W.weap,W.minute,W.seconds FROM Quest INNER JOIN (SELECT distinct weapon as weap ,questname,minute,seconds, COUNT(weapon) OVER(PARTITION BY weapon,questname ORDER BY minute, seconds) as countrank FROM TimeRecord) as W ON Quest.questname = W.questname WHERE W.countrank = 1;')
+    weaprecords = c.fetchall()
     c.close()
     if request.method == 'POST':
         if request.form['submit'] == 'prev':
             return render_template('dashboard.html')
-    return render_template('viewrecord.html', records=records)
+    return render_template('viewrecord.html', records=records, weaprecords=weaprecords)
 
 
 @app.route('/armorset', methods=['POST', 'GET'])
@@ -250,6 +305,32 @@ def armorset():
             fastest = c.fetchone()
             c.close()
             return render_template('record.html', records=records, fastest=fastest)
+
+
+@app.route('/addquest', methods=['POST', 'GET'])
+def addque():
+    if request.method == 'POST':
+        if request.form['submit'] == 'submit':
+            questname = request.form['questname']
+            questmonster = request.form['questmonster']
+            questrank = request.form['questrank']
+            c = conn.cursor()
+            c.execute('INSERT INTO Quest(questname,monster,questrank) VALUES (%s,%s,%s)',
+                      (questname, questmonster, questrank))
+            conn.commit()
+            c.close()
+            return redirect('/dashboard')
+    return render_template('addquest.html')
+# Route which allows the page to change its language setting
+
+
+@app.route('/change', methods=['POST', 'GET'])
+def changeLanguage():
+    if session['language'] == 'Japanese':
+        session['language'] = 'English'
+    else:
+        session['language'] = 'Japanese'
+    return render_template('dashboard.html')
 
 
 app.run(host='0.0.0.0', port=8080)

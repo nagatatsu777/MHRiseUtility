@@ -12,7 +12,10 @@
     {%include "navbar.html"%}
     <div class="login-page">
       <div class="quest">
-        <h2 class="questli">クエストリスト</h2>
+        <h2 class="questli">
+          {% if session['language']=='Japanese'%}クエストリスト{%endif%}
+          {%if session['language'] == 'English'%}Quest List{%endif%}
+        </h2>
         <form class="login-form" action="/questlist" method="POST">
           {% for i in quest%}
           <button

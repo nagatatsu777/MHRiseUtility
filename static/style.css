@@ -62,27 +62,27 @@ body {
 .quest button:focus {
   background: rgb(175, 127, 72);
 }
-#result {
+.recordtable {
   font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
   width: 100%;
 }
 
-#result td,
-#result th {
-  border: 1px solid #ddd;
+.recordtable td,
+.recordtable th {
+  border: 1px solid rgb(73, 71, 71);
   padding: 8px;
 }
 
-#result tr:nth-child(even) {
+.recordtable tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 
-#result tr:hover {
+.recordtable tr:hover {
   background-color: #ddd;
 }
 
-#result th {
+.recordtable th {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
@@ -107,4 +107,7 @@ body {
   background-color: black;
   font-size: 20px;
   text-align: center;
+}
+#black {
+  color: black;
 }

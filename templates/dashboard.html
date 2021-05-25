@@ -11,13 +11,13 @@
             <div class = "userForms">
                 <table>
                     <tr>
-                        <th><button type = "submit" name = "submit" value = 'record'>記録する</button></th>
+                        <th><button type = "submit" name = "submit" value = 'record'>{%if session['language'] == 'Japanese'%}記録する{%endif%}{%if session['language'] == 'English'%}Record{%endif%}</button></th>
                     </tr>
                     <tr>
-                        <th><button type = "submit" name = "submit" value = 'export'>記録を見る</button></th>
+                        <th><button type = "submit" name = "submit" value = 'export'>{%if session['language'] == 'Japanese'%}記録を見る{%endif%}{%if session['language'] == 'English'%}View Records{%endif%}</button></th>
                     </tr>
                     {% if session['userrole'] == 'admin'%}
-                        <th><button type = "submit" name = "submit" value = 'addque'>クエスト追加</button></th>
+                        <th><button type = "submit" name = "submit" value = 'addque'>{%if session['language'] == 'Japanese'%}クエスト追加{%endif%}{%if session['language'] == 'English'%}Add Quest{%endif%}</button></th>
                     {%endif%}
                 </table>
             </div>

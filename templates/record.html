@@ -12,9 +12,10 @@
     <div class="login-page">
       <div class="userForms">
         <h1 style="margin-top: 1em">
-          {{records[0].questname}} ( {{fastest.monster}})
+          {{fastest.questname}} ( {{fastest.monster}})
           <div id="fastestrecord">
-            最速記録<br />
+            {%if session['language'] == 'Japanese'%}最速記録{%endif%}{%if
+            session['language'] == 'English'%}Fastest Time{%endif%}<br />
             Time: {{fastest.minute}} : {{fastest.sec}}<br />
             {{fastest.weap}}
           </div>
@@ -25,12 +26,24 @@
           style="width: 500px; height: 500px"
         />
         <form class="login-form" action="/record" method="POST">
-          <table id="result">
+          <table id="result" class="recordtable">
             <tr>
-              <th>武器</th>
-              <th>分</th>
-              <th>秒</th>
-              <th>装備</th>
+              <th>
+                {%if session['language'] == 'Japanese'%}武器{%endif%}{%if
+                session['language'] == 'English'%}Weapon{%endif%}
+              </th>
+              <th>
+                {%if session['language'] == 'Japanese'%}分{%endif%}{%if
+                session['language'] == 'English'%}Minutes{%endif%}
+              </th>
+              <th>
+                {%if session['language'] == 'Japanese'%}秒{%endif%}{%if
+                session['language'] == 'English'%}Seconds{%endif%}
+              </th>
+              <th>
+                {%if session['language'] == 'Japanese'%}装備{%endif%}{%if
+                session['language'] == 'English'%}Armor{%endif%}
+              </th>
               <th></th>
             </tr>
 
@@ -41,17 +54,24 @@
               <td>{{i.seconds}}</td>
               <td>
                 <button type="submit" name="submit" value="{{i.armorid}}">
-                  装備を見る</button
+                  {%if session['language'] ==
+                  'Japanese'%}装備を見る{%endif%}{%if session['language'] ==
+                  'English'%}View Armor Set{%endif%}</button
                 ><br />
               </td>
             </tr>
             {%endfor%}
           </table>
           <button type="submit" name="submit" value="create">
-            新しい記録を作る
+            {%if session['language'] ==
+            'Japanese'%}新しい記録を作成する{%endif%}{%if session['language'] ==
+            'English'%}Create New Record{%endif%}
           </button>
-          <button type="submit" name="submit" value="prev">前に戻る</button>
-
+          <button type="submit" name="submit" value="prev">
+            {%if session['language'] == 'Japanese'%}前に戻る{%endif%}{%if
+            session['language'] == 'English'%}Go back to the previous
+            page{%endif%}
+          </button>
           <script></script>
         </form>
       </div>

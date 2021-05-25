@@ -104,13 +104,34 @@
 <header id="header">
   <div>
     <h1 class="logo mr-auto">
-      <a href="/" style="color: white">モンハン記録</a>
+      <a href="/" style="color: white"
+        >{%if session['language'] == 'Japanese'%}モンハン記録{%endif%}{%if
+        session['language'] == 'English'%}Monster Hunter Records{%endif%}</a
+      >
     </h1>
     <nav class="nav-menu">
       <ul>
-        <li><a href="/" style="color: white">ログインに戻る</a></li>
-        <li><a href="/ranklist" style="color: white">クエストリスト</a></li>
-        <li><a href="/dashboard" style="color: white">ダッシュボード</a></li>
+        <li>
+          <a href="/" style="color: white"
+            >{%if session['language']=='Japanese'%}ログインに戻る{%endif%}{%if
+            session['language'] == 'English'%}Go Back to Login Page{%endif%}</a
+          >
+        </li>
+        <li>
+          <a href="/ranklist" style="color: white"
+            >{%if session['language']=='Japanese'%}クエストリスト{%endif%} {%if
+            session['language'] == 'English'%}Quest List{%endif%}</a
+          >
+        </li>
+        <li>
+          <a href="/dashboard" style="color: white"
+            >{%if session['language']=='Japanese'%}ダッシュボード{%endif%}{%if
+            session['language'] == 'English'%}DashBoard{%endif%}</a
+          >
+        </li>
+        <li>
+          <a href="/change" style="color: white">Change Language</a>
+        </li>
       </ul>
     </nav>
   </div>

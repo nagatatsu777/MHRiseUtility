@@ -7,15 +7,27 @@
     <form action = "/viewrecord" method = "post">
     <body>
     {% include "navbar.html"%}
+
         <div class = "result-page" id = "result">
             <div class = "userForms">
-            <h2 style = "margin-top: 1em;">記録</h2>
-            <table id = "result">
+            <h2 style = "margin-top: 1em;" id = "black">{%if session['language'] == 'Japanese'%}記録{%endif%}{%if session['language'] == 'English'%}Record{%endif%}</h2>
+            </div>
+                           <img
+          class="recordgraph"
+          src="{{ url_for('static', filename = session['username']+'piechart.png')}}"
+          style="width: 700px; height: 500px"
+    />
+                   <img
+          class="recordgraph"
+          src="{{ url_for('static', filename = session['username']+'average.png')}}"
+          style="width: 700px; height: 500px"
+    />
+            <table id = "resu" class = "recordtable"style = "display:block;">
             <tr>
-                <th>クエスト名</th>
-                <th>モンスター名</th>
-                <th>武器種</th>
-                <th>タイム</th>
+                <th>{%if session['language'] == 'Japanese'%}クエスト名{%endif%}{%if session['language'] == 'English'%}Quest Name{%endif%}</th>
+                <th>{%if session['language'] == 'Japanese'%}モンスター{%endif%}{%if session['language'] == 'English'%}Monster{%endif%}</th>
+                <th>{%if session['language'] == 'Japanese'%}武器種{%endif%}{%if session['language'] == 'English'%}Weapon{%endif%}</th>
+                <th>{%if session['language'] == 'Japanese'%}タイム{%endif%}{%if session['language'] == 'English'%}Time{%endif%}</th>
             </tr>
             {%for i in records%}
             <tr>
@@ -26,9 +38,37 @@
             </tr>
             {%endfor%}
             </table>
+            <table id = "res" style = "display:none;">
+            <tr>
+                <th>{%if session['language'] == 'Japanese'%}クエスト名{%endif%}{%if session['language'] == 'English'%}Quest Name{%endif%}</th>
+                <th>{%if session['language'] == 'Japanese'%}モンスター{%endif%}{%if session['language'] == 'English'%}Monster{%endif%}</th>
+                <th>{%if session['language'] == 'Japanese'%}武器種{%endif%}{%if session['language'] == 'English'%}Weapon{%endif%}</th>
+                <th>{%if session['language'] == 'Japanese'%}タイム{%endif%}{%if session['language'] == 'English'%}Time{%endif%}</th>
+            </tr>
+            {%for s in weaprecords%}
+            <tr>
+                <td>{{s.questname}}</td>
+                <td>{{s.monster}}</td>
+                <td>{{s.weap}}</td>
+                <td>{{s.minute}} : {{s.seconds}}</td>
+            </tr>
+            {%endfor%}
+            </table>
+            <button type = "submit" name = "submit" value = "different" onclick = "changea()">速さ順</button>
+            <button type = "submit" name = "submit" value = "different" onclick = "changeb()">武器ごと</button>
             <button type = "submit" name = "submit" value = "prev">前に戻る</button>
             <script>
+                function changea(){
+                    event.preventDefault();
+                    document.getElementById('res').style = "display:none;";
+                    document.getElementById('resu').style = "display:block;";
+                }
 
+                function changeb(){
+                    event.preventDefault();
+                    document.getElementById('resu').style = "display:none;";
+                    document.getElementById('res').style = "display:block;";
+                }
              </script>
             </form>
             </div>

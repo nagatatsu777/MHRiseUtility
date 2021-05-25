@@ -1,70 +1,97 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html>
-    <head>
-        <title> Login</title>
-    </head>
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
-    <body>
-        <div class = "login-page">
-            <div class = "userForms">
-            <h2 style = "margin-top: 1em;">ようこそ(Login)</h2>
-            <form class = "login-form" action = "/login" method = "POST" onsubmit = "userValidate()">
-                <input type = "text" id = "username" name = "username" placeholder = "Type in Username"><br>
-                <input type = "password" id = "password" name = "password" placeholder = "Type in Password">
-                <button type = "submit">LOGIN</button>
-                <div id = "error"></div>
-                <div>
-                    {%for i in info%}
-                    <input type = "hidden" id = "useryes" name = "useryes" class = "useryes" value = {{i.username}}>
-                    <input type = "hidden" id = "passyes" name = "passyes" class = "passyes" value = {{i.pass}}>
-                    {%endfor%}
-                 </div>
-                 <script>
-   
-                    function userValidate(){         
-                     let a = document.querySelectorAll('.useryes');
-                                    let b = [];
-                                    let c = 0;
-                                    for(let i = 0; i <= a.length-1; i++){
-                                            b.push(a[i].value);
-                                    }
-                                    let d = document.querySelectorAll('.passyes');
-                                    let e = [];
-                                    let f = 0;
-                                    
-                                    for(let i = 0; i <= d.length-1; i++){
-                                            e.push(d[i].value);
-                                     }
+  <head>
+    <title>Login</title>
+  </head>
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="{{ url_for('static',filename='style.css') }}"
+  />
+  <body>
+    <div class="login-page">
+      <div class="userForms">
+        <h2 style="margin-top: 1em">ようこそ(Login)</h2>
+        <form class="login-form" action="/login" method="POST">
+          <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Type in Username"
+          /><br />
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Type in Password"
+          />
+          <button
+            type="submit"
+            name="submit"
+            value="submit"
+            onclick="userValidate()"
+          >
+            LOGIN
+          </button>
+          <button type="submit" name="submit" value="change">
+            Change Language
+          </button>
+          <div id="error"></div>
+          <div>
+            {%for i in info%}
+            <input
+              type="hidden"
+              id="useryes"
+              name="useryes"
+              class="useryes"
+              value="{{i.username}}"
+            />
+            <input
+              type="hidden"
+              id="passyes"
+              name="passyes"
+              class="passyes"
+              value="{{i.pass}}"
+            />
+            {%endfor%}
+          </div>
+          <script>
+            function userValidate() {
+              let a = document.querySelectorAll(".useryes");
+              let b = [];
+              let c = 0;
+              for (let i = 0; i <= a.length - 1; i++) {
+                b.push(a[i].value);
+              }
+              let d = document.querySelectorAll(".passyes");
+              let e = [];
+              let f = 0;
 
-                                     
-                                    for(let i = 0; i <= b.length-1; i++){
-                                        if(document.getElementById("username").value == b[i]){
-                                            if(document.getElementById("password").value == e[i]){
-                                                c = 1;
+              for (let i = 0; i <= d.length - 1; i++) {
+                e.push(d[i].value);
+              }
 
-                                            }
-                                            
-                                        }
-                                    }
+              for (let i = 0; i <= b.length - 1; i++) {
+                if (document.getElementById("username").value == b[i]) {
+                  if (document.getElementById("password").value == e[i]) {
+                    c = 1;
+                  }
+                }
+              }
 
-                                    if(c!=1){
-                                        event.preventDefault();
-                                        document.getElementById("error").innerHTML = "Your password or username is incorrect";
-                                        document.getElementById("error").style.color = "red";
-
-                                    }
-                                    else{
-                                        document.getElementById("error").innerHTML = "";
-                                    }
-                                    
-
-                                }
-                
-  
-             </script>
-            </form>
-            <p class="message"><a href="/register">アカンウトの登録</a></p>
-            </div>
-        </div>
-    </body>
+              if (c != 1) {
+                event.preventDefault();
+                document.getElementById("error").innerHTML =
+                  "Your password or username is incorrect";
+                document.getElementById("error").style.color = "red";
+              } else {
+                document.getElementById("error").innerHTML = "";
+              }
+            }
+          </script>
+        </form>
+        <p class="message"><a href="/register">アカンウトの登録</a></p>
+      </div>
+    </div>
+  </body>
 </html>
