@@ -1,5 +1,10 @@
 body {
   color: rgb(0, 0, 0);
+  background-image: url(lang.JPG);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  width: 100%;
+  height: 100%;
 }
 /* FOR a Single Transparent image
 body::before {
@@ -93,7 +98,7 @@ body::before {
 }
 .recordtable tr:nth-child(odd) {
   background-color: #4cc9e9;
-  color: white;
+  color: black;
   font-family: "Roboto", sans-serif;
 }
 

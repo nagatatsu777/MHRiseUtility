@@ -70,6 +70,9 @@ def dashboard():
             # Window function example
             c.execute('SELECT Quest.questname, Quest.monster, W.weap,W.minute,W.seconds FROM Quest INNER JOIN (SELECT distinct weapon as weap ,questname,minute,seconds, COUNT(weapon) OVER(PARTITION BY weapon,questname ORDER BY minute, seconds) as countrank FROM TimeRecord) as W ON Quest.questname = W.questname WHERE W.countrank = 1;')
             weaprecords = c.fetchall()
+            # Records by the questname
+            c.execute('SELECT Quest.questname, Quest.monster, W.weap,W.minute,W.seconds, Quest.questrank FROM Quest INNER JOIN (SELECT distinct weapon as weap ,questname,minute,seconds, COUNT(weapon) OVER(PARTITION BY questname,weapon ORDER BY minute, seconds) as countrank FROM TimeRecord) as W ON Quest.questname = W.questname WHERE W.countrank = 1 ORDER BY Quest.questrank;')
+            questrecords = c.fetchall()
             # Make the pie chart of the ratio of weapons ranking the top
             c.execute('SELECT W.weap as we, COUNT(W.weap) as toprank FROM TimeRecord INNER JOIN (SELECT distinct weapon as weap ,questname,minute,seconds, COUNT(weapon) OVER(PARTITION BY questname ORDER BY minute, seconds) as countrank FROM TimeRecord) as W ON W.questname = TimeRecord.questname AND TimeRecord.weapon = W.weap WHERE W.countrank = 1 GROUP BY W.weap;')
             data = []
@@ -105,7 +108,7 @@ def dashboard():
                         session['username']+'average')
             plt.close()
             c.close()
-            return render_template('viewrecord.html', records=records, weaprecords=weaprecords)
+            return render_template('viewrecord.html', records=records, weaprecords=weaprecords, questrecords=questrecords)
         if request.form['submit'] == 'addque':
             return render_template('addquest.html')
     return render_template('dashboard.html')
@@ -287,11 +290,13 @@ def viewre():
     records = c.fetchall()
     c.execute('SELECT Quest.questname, Quest.monster, W.weap,W.minute,W.seconds FROM Quest INNER JOIN (SELECT distinct weapon as weap ,questname,minute,seconds, COUNT(weapon) OVER(PARTITION BY weapon,questname ORDER BY minute, seconds) as countrank FROM TimeRecord) as W ON Quest.questname = W.questname WHERE W.countrank = 1;')
     weaprecords = c.fetchall()
+    c.execute('SELECT Quest.questname, Quest.monster, W.weap,W.minute,W.seconds, Quest.questrank FROM Quest INNER JOIN (SELECT distinct weapon as weap ,questname,minute,seconds, COUNT(weapon) OVER(PARTITION BY questname,weapon ORDER BY minute, seconds) as countrank FROM TimeRecord) as W ON Quest.questname = W.questname WHERE W.countrank = 1 ORDER BY Quest.questrank;')
+    questrecords = c.fetchall()
     c.close()
     if request.method == 'POST':
         if request.form['submit'] == 'prev':
             return render_template('dashboard.html')
-    return render_template('viewrecord.html', records=records, weaprecords=weaprecords)
+    return render_template('viewrecord.html', records=records, weaprecords=weaprecords, questrecords=questrecords)
 
 
 @app.route('/armorset', methods=['POST', 'GET'])

@@ -23,8 +23,9 @@
           style="width: 700px; height: 500px"
     />
     <br>
-                <button type = "submit" name = "submit" value = "different" onclick = "changea()">速さ順</button>
-            <button type = "submit" name = "submit" value = "different" onclick = "changeb()">武器ごと</button>
+            <button type = "submit" name = "submit" value = "different" onclick = "changea()">{%if session['language'] == 'Japanese'%}速さ順{%endif%}{%if session['language'] == 'English'%}By speed{%endif%}</button>
+            <button type = "submit" name = "submit" value = "different" onclick = "changeb()">{%if session ['language']=='Japanese'%}武器ごと{%endif%}{%if session['language'] == 'English'%}By weapons{%endif%}</button>
+            <button type = "submit" name = "submit" value = "different" onclick = "changec()">{%if session['language']=='Japanese'%}クエストごと{%endif%}{%if session['language'] == 'English'%}By Quest{%endif%}</button>
             <table id = "resu" class = "recordtable"style = "display:block;">
             <tr>
                 <th>{%if session['language'] == 'Japanese'%}クエスト名{%endif%}{%if session['language'] == 'English'%}Quest Name{%endif%}</th>
@@ -57,18 +58,42 @@
             </tr>
             {%endfor%}
             </table>
+            <table id = "req" class = "recordtable" style = "display:none;">
+            <tr>
+                <th>{%if session['language'] == 'Japanese'%}クエスト名{%endif%}{%if session['language'] == 'English'%}Quest Name{%endif%}</th>
+                <th>{%if session['language'] == 'Japanese'%}モンスター{%endif%}{%if session['language'] == 'English'%}Monster{%endif%}</th>
+                <th>{%if session['language'] == 'Japanese'%}武器種{%endif%}{%if session['language'] == 'English'%}Weapon{%endif%}</th>
+                <th>{%if session['language'] == 'Japanese'%}タイム{%endif%}{%if session['language'] == 'English'%}Time{%endif%}</th>
+            </tr>
+            {%for q in questrecords%}
+            <tr>
+                <td>{{q.questname}}</td>
+                <td>{{q.monster}}</td>
+                <td>{{q.weap}}</td>
+                <td>{{q.minute}} : {{q.seconds}}</td>
+            </tr>
+            {%endfor%}
+            </table>
             <button type = "submit" name = "submit" value = "prev">前に戻る</button>
             <script>
                 function changea(){
                     event.preventDefault();
                     document.getElementById('res').style = "display:none;";
                     document.getElementById('resu').style = "display:block;";
+                    document.getElementById('req').style = "display:none;";
                 }
 
                 function changeb(){
                     event.preventDefault();
                     document.getElementById('resu').style = "display:none;";
                     document.getElementById('res').style = "display:block;";
+                    document.getElementById('req').style = "display:none;";
+                }
+                function changec(){
+                    event.preventDefault();
+                    document.getElementById('res').style = "display:none;";
+                    document.getElementById('resu').style = "display:none;";
+                    document.getElementById('req').style = "display:block;";
                 }
              </script>
             </form>
