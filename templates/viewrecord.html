@@ -22,6 +22,9 @@
           src="{{ url_for('static', filename = session['username']+'average.png')}}"
           style="width: 700px; height: 500px"
     />
+    <br>
+                <button type = "submit" name = "submit" value = "different" onclick = "changea()">速さ順</button>
+            <button type = "submit" name = "submit" value = "different" onclick = "changeb()">武器ごと</button>
             <table id = "resu" class = "recordtable"style = "display:block;">
             <tr>
                 <th>{%if session['language'] == 'Japanese'%}クエスト名{%endif%}{%if session['language'] == 'English'%}Quest Name{%endif%}</th>
@@ -38,7 +41,7 @@
             </tr>
             {%endfor%}
             </table>
-            <table id = "res" style = "display:none;">
+            <table id = "res" class = "recordtable" style = "display:none;">
             <tr>
                 <th>{%if session['language'] == 'Japanese'%}クエスト名{%endif%}{%if session['language'] == 'English'%}Quest Name{%endif%}</th>
                 <th>{%if session['language'] == 'Japanese'%}モンスター{%endif%}{%if session['language'] == 'English'%}Monster{%endif%}</th>
@@ -54,8 +57,6 @@
             </tr>
             {%endfor%}
             </table>
-            <button type = "submit" name = "submit" value = "different" onclick = "changea()">速さ順</button>
-            <button type = "submit" name = "submit" value = "different" onclick = "changeb()">武器ごと</button>
             <button type = "submit" name = "submit" value = "prev">前に戻る</button>
             <script>
                 function changea(){

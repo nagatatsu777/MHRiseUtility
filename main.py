@@ -6,11 +6,13 @@ import matplotlib
 matplotlib.use('Agg')
 app = Flask('app')
 app.secret_key = b'xx'
-UPLOAD_FOLDER = ""
+UPLOAD_FOLDER = "/Users/Lan/Desktop/MHRiseUtility/static/"
 # save path
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 conn = mysql.connector.connect(
-
+    user='nagatatsu',
+    password='8127',
+    database='test',
 )
 
 
@@ -46,7 +48,8 @@ def login():
                       (session['username'],))
             session['userrole'] = c.fetchone()[0]
             print(session['userrole'])
-    return render_template("dashboard.html")
+        return render_template("dashboard.html")
+    return render_template("index.html")
 
 
 @app.route('/dashboard', methods=['POST', 'GET'])

@@ -1,7 +1,18 @@
 body {
-  background-color: rgb(253, 231, 183);
   color: rgb(0, 0, 0);
 }
+/* FOR a Single Transparent image
+body::before {
+  position: fixed;
+  content: "";
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.4;
+  z-index: -1;
+  background: url(lang.JPG);
+}*/
 .questli {
   margin: 1 em;
   color: black;
@@ -10,7 +21,8 @@ body {
   width: 50em;
   padding: 1em 1em 1em;
   margin: auto;
-  background-color: rgb(255, 254, 189);
+  background-color: rgb(56, 52, 52);
+  color: white;
 }
 .result-page {
   width: 55em;
@@ -70,16 +82,24 @@ body {
 
 .recordtable td,
 .recordtable th {
-  border: 1px solid rgb(73, 71, 71);
+  border: 1px solid rgb(23, 26, 23);
   padding: 8px;
 }
 
 .recordtable tr:nth-child(even) {
-  background-color: #f2f2f2;
+  background-color: #ffffff;
+  color: black;
+  font-family: "Roboto", sans-serif;
+}
+.recordtable tr:nth-child(odd) {
+  background-color: #4cc9e9;
+  color: white;
+  font-family: "Roboto", sans-serif;
 }
 
 .recordtable tr:hover {
   background-color: #ddd;
+  color: black;
 }
 
 .recordtable th {
