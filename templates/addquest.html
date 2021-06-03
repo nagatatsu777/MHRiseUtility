@@ -1,0 +1,31 @@
+<!DOCTYPE html> 
+<html>
+    <head>
+        <title> Login</title>
+    </head>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+    <body>
+    {% include "navbar.html"%}
+        <div class = "login-page">
+            <div class = "userForms">
+            <h2 style = "margin-top: 1em;">{%if session['language'] == 'Japanese'%}記録情報{%endif%}{%if session['language'] == 'English'%}Information to add{%endif%}</h2>
+            <form class = "login-form" action = "/addquest" method = "POST">
+            <div class = "userarmorinput">
+                <label for = "questname">{%if session['language'] == 'Japanese'%}クエスト名{%endif%}{%if session['language'] == 'English'%}Quest Name{%endif%}</label>
+                <input type = "text" class = "input" name = "questname" id = "questname" required>
+                <label for "questmonster">{%if session['language'] == 'Japanese'%}モンスター{%endif%}{%if session['language'] == 'English'%}Monster{%endif%}</label>
+                <input type = "text" class = "input" name = "questmonster" id = "questmonster" required>
+                <label for = "questrank">{%if session['language'] == 'Japanese'%}クエストランク{%endif%}{%if session['language'] == 'English'%}QuestRank{%endif%}</label>
+                <input type = "text" class = "input" name = "questrank" id = "questrank" required>
+            </div>
+            </div>
+            <div id = "danger"></div>
+            <button type = "submit" name = "submit" value = "submit">{%if session['language'] == 'Japanese'%}クエスト追加{%endif%}{%if session['language'] == 'English'%}Add Quest{%endif%}</button>
+            <button type = "submit" name = "submit" value = "prev">{%if session['language'] == 'Japanese'%}前に戻る{%endif%}{%if session['language'] == 'English'%}Go back to the previous page{%endif%}</button>
+            <script>
+             </script>
+            </form>
+            </div>
+        </div>
+    </body>
+</html>

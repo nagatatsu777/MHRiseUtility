@@ -6,13 +6,11 @@ import matplotlib
 matplotlib.use('Agg')
 app = Flask('app')
 app.secret_key = b'xx'
-UPLOAD_FOLDER = "/Users/Lan/Desktop/MHRiseUtility/static/"
+UPLOAD_FOLDER = ""
 # save path
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 conn = mysql.connector.connect(
-    user='nagatatsu',
-    password='8127',
-    database='test',
+ 
 )
 
 
@@ -51,6 +49,28 @@ def login():
         return render_template("dashboard.html")
     return render_template("index.html")
 
+# Route for the registration page
+
+
+@app.route('/register', methods=['POST', 'GET'])
+def register():
+    c = conn.cursor(dictionary=True)
+    c.execute('SELECT username FROM Users')
+    # pass username data for the validation
+    usernames = c.fetchall()
+    if request.method == 'POST':
+        if request.form['submit'] == 'submit':
+            username = request.form['username']
+            password = request.form['password']
+            session['username'] = username
+            c.execute('INSERT INTO Users(username, pass, userrole) VALUES(%s,%s,%s);',
+                      (username, password, 'user'))
+            conn.commit()
+            c.close()
+            return render_template('dashboard.html')
+    c.close()
+    return render_template('register.html', usernames=usernames)
+
 
 @app.route('/dashboard', methods=['POST', 'GET'])
 def dashboard():
@@ -65,13 +85,16 @@ def dashboard():
             return render_template('ranklist.html', lists=lists)
         if request.form['submit'] == 'export':
             c = conn.cursor(dictionary=True)
-            c.execute('SELECT Quest.questname, Quest.monster, W.weap,W.minute,W.sec FROM Quest INNER JOIN(SELECT TimeRecord.questname as qn,TimeRecord.weapon as weap,min(TimeRecord.minute) as minute ,min(TimeRecord.seconds) as sec FROM TimeRecord INNER JOIN(SELECT questname,weapon,min(minute) as ma FROM TimeRecord GROUP BY questname,weapon) AS S ON S.questname = TimeRecord.questname AND S.weapon = TimeRecord.weapon AND S.ma = TimeRecord.minute GROUP BY TimeRecord.questname, TimeRecord.weapon ORDER BY minute ASC, sec ASC) AS W ON Quest.questname = W.qn;')
+            c.execute(
+                'SELECT Quest.questname, Quest.monster, W.weap,W.minute,W.sec FROM Quest INNER JOIN(SELECT TimeRecord.questname as qn,TimeRecord.weapon as weap,min(TimeRecord.minute) as minute ,min(TimeRecord.seconds) as sec FROM TimeRecord INNER JOIN(SELECT questname,weapon,min(minute) as ma FROM TimeRecord GROUP BY questname,weapon) AS S ON S.questname = TimeRecord.questname AND S.weapon = TimeRecord.weapon AND S.ma = TimeRecord.minute GROUP BY TimeRecord.questname, TimeRecord.weapon ORDER BY minute ASC, sec ASC) AS W ON Quest.questname = W.qn;')
             records = c.fetchall()
             # Window function example
-            c.execute('SELECT Quest.questname, Quest.monster, W.weap,W.minute,W.seconds FROM Quest INNER JOIN (SELECT distinct weapon as weap ,questname,minute,seconds, COUNT(weapon) OVER(PARTITION BY weapon,questname ORDER BY minute, seconds) as countrank FROM TimeRecord) as W ON Quest.questname = W.questname WHERE W.countrank = 1;')
+            c.execute(
+                'SELECT Quest.questname, Quest.monster, W.weap,W.minute,W.seconds FROM Quest INNER JOIN (SELECT distinct weapon as weap ,questname,minute,seconds, COUNT(weapon) OVER(PARTITION BY weapon,questname ORDER BY minute, seconds) as countrank FROM TimeRecord WHERE username = %s) as W ON Quest.questname = W.questname WHERE W.countrank = 1;', (session['username'],))
             weaprecords = c.fetchall()
             # Records by the questname
-            c.execute('SELECT Quest.questname, Quest.monster, W.weap,W.minute,W.seconds, Quest.questrank FROM Quest INNER JOIN (SELECT distinct weapon as weap ,questname,minute,seconds, COUNT(weapon) OVER(PARTITION BY questname,weapon ORDER BY minute, seconds) as countrank FROM TimeRecord) as W ON Quest.questname = W.questname WHERE W.countrank = 1 ORDER BY Quest.questrank;')
+            c.execute(
+                'SELECT Quest.questname, Quest.monster, W.weap,W.minute,W.seconds, Quest.questrank FROM Quest INNER JOIN (SELECT distinct weapon as weap ,questname,minute,seconds, COUNT(weapon) OVER(PARTITION BY questname,weapon ORDER BY minute, seconds) as countrank FROM TimeRecord WHERE username = %s) as W ON Quest.questname = W.questname WHERE W.countrank = 1 ORDER BY Quest.questrank;', (session['username'],))
             questrecords = c.fetchall()
             # Make the pie chart of the ratio of weapons ranking the top
             c.execute('SELECT W.weap as we, COUNT(W.weap) as toprank FROM TimeRecord INNER JOIN (SELECT distinct weapon as weap ,questname,minute,seconds, COUNT(weapon) OVER(PARTITION BY questname ORDER BY minute, seconds) as countrank FROM TimeRecord) as W ON W.questname = TimeRecord.questname AND TimeRecord.weapon = W.weap WHERE W.countrank = 1 GROUP BY W.weap;')
@@ -231,6 +254,7 @@ def recordwe():
             c.execute('SELECT * FROM TimeRecord WHERE questname = %s AND username = %s ORDER BY minute DESC,seconds DESC',
                       (session['questname'], session['username']))
             records = c.fetchall()
+            print(session['username'])
             c.execute('SELECT Quest.monster, W.weap,W.minute,W.sec FROM Quest INNER JOIN(SELECT TimeRecord.questname as qn,TimeRecord.weapon as weap,min(TimeRecord.minute) as minute ,min(TimeRecord.seconds) as sec FROM TimeRecord INNER JOIN(SELECT questname,weapon,min(minute) as ma FROM TimeRecord GROUP BY questname,weapon) AS S ON S.questname = TimeRecord.questname AND S.weapon = TimeRecord.weapon AND S.ma = TimeRecord.minute GROUP BY TimeRecord.questname, TimeRecord.weapon) AS W ON Quest.questname = W.qn WHERE Quest.questname= %s ORDER BY W.minute ASC, W.sec ASC  LIMIT 1;',
                       (session['questname'],))
             fastest = c.fetchone()

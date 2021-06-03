@@ -23,9 +23,9 @@
           style="width: 700px; height: 500px"
     />
     <br>
-            <button type = "submit" name = "submit" value = "different" onclick = "changea()">{%if session['language'] == 'Japanese'%}速さ順{%endif%}{%if session['language'] == 'English'%}By speed{%endif%}</button>
-            <button type = "submit" name = "submit" value = "different" onclick = "changeb()">{%if session ['language']=='Japanese'%}武器ごと{%endif%}{%if session['language'] == 'English'%}By weapons{%endif%}</button>
-            <button type = "submit" name = "submit" value = "different" onclick = "changec()">{%if session['language']=='Japanese'%}クエストごと{%endif%}{%if session['language'] == 'English'%}By Quest{%endif%}</button>
+            <button type = "submit" name = "submit" value = "different" onclick = "changea()">{%if session['language'] == 'Japanese'%}速さ順（全記録）{%endif%}{%if session['language'] == 'English'%}By speed(All records){%endif%}</button>
+            <button type = "submit" name = "submit" value = "different" onclick = "changeb()">{%if session ['language']=='Japanese'%}武器ごと（このアカウントのみ）{%endif%}{%if session['language'] == 'English'%}By weapons(Only the user){%endif%}</button>
+            <button type = "submit" name = "submit" value = "different" onclick = "changec()">{%if session['language']=='Japanese'%}クエストごと（このアカウントのみ）{%endif%}{%if session['language'] == 'English'%}By Quest(Only the user){%endif%}</button>
             <table id = "resu" class = "recordtable"style = "display:block;">
             <tr>
                 <th>{%if session['language'] == 'Japanese'%}クエスト名{%endif%}{%if session['language'] == 'English'%}Quest Name{%endif%}</th>

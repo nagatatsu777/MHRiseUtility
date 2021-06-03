@@ -6,6 +6,9 @@ body {
   width: 100%;
   height: 100%;
 }
+a {
+  color: white;
+}
 /* FOR a Single Transparent image
 body::before {
   position: fixed;

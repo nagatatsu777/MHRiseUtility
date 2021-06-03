@@ -1,0 +1,52 @@
+<!DOCTYPE html> 
+<html>
+    <head>
+        <title> Login</title>
+    </head>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+    <body>
+        <div class = "login-page">
+            <div class = "userForms">
+            <h2 style = "margin-top: 1em;">{%if session['language'] == 'Japanese'%}入力情報{%endif%}{%if session['language'] == 'English'%}Information to add{%endif%}</h2>
+            <form class = "login-form" action = "/register" method = "POST">
+            <div class = "userarmorinput">
+                <label for = "username">Username</label>
+                <input type = "text" class = "input" name = "username" id = "username" required>
+                <label for "password">Password</label>
+                <input type = "text" class = "input" name = "password" id = "password" required>
+            </div>
+            <div id = "userpass">
+            {%for i in usernames%}
+              <input type="hidden" id="useryes" name="useryes" class="useryes" value="{{i.username}}"/>
+            {%endfor%}
+            </div>
+            <div id = "danger"></div>
+            <button type = "submit" name = "submit" value = "submit" onclick = "userValidate()">{%if session['language'] == 'Japanese'%}記録する{%endif%}{%if session['language'] == 'English'%}Record the information{%endif%}</button>
+            <script>
+              function userValidate() {
+                let a = document.querySelectorAll(".useryes");
+                let b = [];
+                let c = 0;
+                for (let i = 0; i <= a.length - 1; i++) {
+                  b.push(a[i].value);
+                }
+                for (let i = 0; i <= b.length - 1; i++) {
+                  if (document.getElementById("username").value == b[i]) {
+                       c = 1;
+                  }
+                }
+                if(c == 1){
+                    event.preventDefault();
+                    document.getElementById("danger").innerHTML ="Your username is taken";
+                    document.getElementById("danger").style.color = "red";
+                }
+                else{
+                    document.getElementById("danger").innerHTML = "";
+                }
+              }
+            </script>
+            </form>
+            </div>
+        </div>
+    </body>
+</html>

@@ -91,7 +91,13 @@
               }
             </script>
           </form>
-          <p class="message"><a href="/register">アカンウトの登録</a></p>
+          <p class="message">
+            <a href="/register"
+              >{%if session['language'] ==
+              'Japanese'%}アカンウトの登録{%endif%}{%if session['language'] ==
+              'English'%}Register{%endif%}</a
+            >
+          </p>
         </div>
       </div>
     </body>
