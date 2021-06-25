@@ -14,13 +14,40 @@
             </div>
                            <img
           class="recordgraph"
-          src="{{ url_for('static', filename = session['username']+'piechart.png')}}"
-          style="width: 700px; height: 500px"
+          src="{{ url_for('static', filename = session['username']+'piechart1.png')}}"
+          style="width: 840px; height: 600px"
+    />
+          <div class = "result-page" id = "result">
+            <div class = "userForms">
+            <h2 style = "margin-top: 1em;" id = "black">{%if session['language'] == 'Japanese'%}記録{%endif%}{%if session['language'] == 'English'%}Record{%endif%}</h2>
+            </div>
+                           <img
+          class="recordgraph"
+          src="{{ url_for('static', filename = session['username']+'piechart2.png')}}"
+          style="width: 840px; height: 600px"
+    />
+          <div class = "result-page" id = "result">
+            <div class = "userForms">
+            <h2 style = "margin-top: 1em;" id = "black">{%if session['language'] == 'Japanese'%}記録{%endif%}{%if session['language'] == 'English'%}Record{%endif%}</h2>
+            </div>
+                           <img
+          class="recordgraph"
+          src="{{ url_for('static', filename = session['username']+'piechart3.png')}}"
+          style="width: 840px; height: 600px"
+    />
+          <div class = "result-page" id = "result">
+            <div class = "userForms">
+            <h2 style = "margin-top: 1em;" id = "black">{%if session['language'] == 'Japanese'%}記録{%endif%}{%if session['language'] == 'English'%}Record{%endif%}</h2>
+            </div>
+                           <img
+          class="recordgraph"
+          src="{{ url_for('static', filename = session['username']+'piechart14.png')}}"
+          style="width: 840px; height: 600px"
     />
                    <img
           class="recordgraph"
           src="{{ url_for('static', filename = session['username']+'average.png')}}"
-          style="width: 700px; height: 500px"
+          style="width: 700px; height: 700px"
     />
     <br>
             <button type = "submit" name = "submit" value = "different" onclick = "changea()">{%if session['language'] == 'Japanese'%}速さ順（全記録）{%endif%}{%if session['language'] == 'English'%}By speed(All records){%endif%}</button>

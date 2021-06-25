@@ -3,14 +3,37 @@ from flask import Flask, session, redirect, render_template, request
 import mysql.connector
 from datetime import date
 import matplotlib
+from dotenv import load_dotenv, find_dotenv
+import os
 matplotlib.use('Agg')
 app = Flask('app')
 app.secret_key = b'xx'
-UPLOAD_FOLDER = ""
+UPLOAD_FOLDER = "/Users/Lan/Desktop/MHRiseUtility/static/"
 # save path
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+load_dotenv(find_dotenv())
+# graph color dictionary
+colorDict = {
+    "大剣": "#FF8F8F",
+    "太刀": "#93FF33",
+    "片手剣": "#D3D096",
+    "双剣": "#FFFA98",
+    "ランス": "#FEC1B3",
+    "ガンランス": "#FFFE4C",
+    "ハンマー": "#BEBFB5",
+    "狩猟笛": "#FCCE38",
+    "操虫棍": "#C1856F",
+    "チャージアックス": "BROWN",
+    "スラッシュアックス": "PINK",
+    "ライトボウガン": "#C9C7FF",
+    "ヘビィボウガン": "#B0F7FF",
+    "弓": "#FFF460"
+}
 conn = mysql.connector.connect(
- 
+    user=os.getenv("USERD"),
+    password=os.getenv("PASSWORDD"),
+    database=os.getenv("DATABASED"),
+    auth_plugin='mysql_native_password'
 )
 
 
@@ -97,23 +120,91 @@ def dashboard():
                 'SELECT Quest.questname, Quest.monster, W.weap,W.minute,W.seconds, Quest.questrank FROM Quest INNER JOIN (SELECT distinct weapon as weap ,questname,minute,seconds, COUNT(weapon) OVER(PARTITION BY questname,weapon ORDER BY minute, seconds) as countrank FROM TimeRecord WHERE username = %s) as W ON Quest.questname = W.questname WHERE W.countrank = 1 ORDER BY Quest.questrank;', (session['username'],))
             questrecords = c.fetchall()
             # Make the pie chart of the ratio of weapons ranking the top
-            c.execute('SELECT W.weap as we, COUNT(W.weap) as toprank FROM TimeRecord INNER JOIN (SELECT distinct weapon as weap ,questname,minute,seconds, COUNT(weapon) OVER(PARTITION BY questname ORDER BY minute, seconds) as countrank FROM TimeRecord) as W ON W.questname = TimeRecord.questname AND TimeRecord.weapon = W.weap WHERE W.countrank = 1 GROUP BY W.weap;')
+            c.execute('SELECT W.weap as we, COUNT(W.weap) as toprank FROM TimeRecord INNER JOIN (SELECT distinct weapon as weap ,questname,minute,seconds, COUNT(weapon) OVER(PARTITION BY questname ORDER BY minute, seconds) as countrank FROM TimeRecord) as W ON W.questname = TimeRecord.questname AND TimeRecord.weapon = W.weap WHERE W.countrank = 1 GROUP BY W.weap ORDER BY toprank;')
             data = []
             label = []
+            colors = []
+            explode = []
             graphrecords = c.fetchall()
             for s in graphrecords:
                 data.append(s['toprank'])
                 label.append(
                     s['we']+': TopTotal( ' + str(s['toprank'])+' )')
-            plt.pie(data, labels=label, shadow=True)
+                colors.append(colorDict[s['we']])
+                explode.append(0)
+            explode.remove(0)
+            explode.append(0.1)
+            plt.pie(data, labels=label, shadow=True,
+                    colors=colors, explode=explode)
             plt.savefig(app.config['UPLOAD_FOLDER'] +
-                        session['username']+'piechart', bbox_inches='tight')
+                        session['username']+'piechart1', bbox_inches='tight')
+            plt.close()
+            # Make the pie chart of the ratio of weapons ranking the second
+            c.execute('SELECT W.weap as we, COUNT(W.weap) as toprank FROM TimeRecord INNER JOIN (SELECT distinct weapon as weap ,questname,minute,seconds, COUNT(weapon) OVER(PARTITION BY questname ORDER BY minute, seconds) as countrank FROM TimeRecord) as W ON W.questname = TimeRecord.questname AND TimeRecord.weapon = W.weap WHERE W.countrank = 2 GROUP BY W.weap ORDER BY toprank;')
+            data = []
+            label = []
+            colors = []
+            explode = []
+            graphrecords = c.fetchall()
+            for s in graphrecords:
+                data.append(s['toprank'])
+                label.append(
+                    s['we']+': Total( ' + str(s['toprank'])+' )')
+                colors.append(colorDict[s['we']])
+                explode.append(0)
+            explode.remove(0)
+            explode.append(0.1)
+            plt.pie(data, labels=label, shadow=True,
+                    colors=colors, explode=explode)
+            plt.savefig(app.config['UPLOAD_FOLDER'] +
+                        session['username']+'piechart2', bbox_inches='tight')
+            plt.close()
+            # Make the pie chart of the ratio of weapons ranking the third
+            c.execute('SELECT W.weap as we, COUNT(W.weap) as toprank FROM TimeRecord INNER JOIN (SELECT distinct weapon as weap ,questname,minute,seconds, COUNT(weapon) OVER(PARTITION BY questname ORDER BY minute, seconds) as countrank FROM TimeRecord) as W ON W.questname = TimeRecord.questname AND TimeRecord.weapon = W.weap WHERE W.countrank = 3 GROUP BY W.weap ORDER BY toprank;')
+            data = []
+            label = []
+            colors = []
+            explode = []
+            graphrecords = c.fetchall()
+            for s in graphrecords:
+                data.append(s['toprank'])
+                label.append(
+                    s['we']+': Total( ' + str(s['toprank'])+' )')
+                colors.append(colorDict[s['we']])
+                explode.append(0)
+            explode.remove(0)
+            explode.append(0.1)
+            plt.pie(data, labels=label, shadow=True,
+                    colors=colors, explode=explode)
+            plt.savefig(app.config['UPLOAD_FOLDER'] +
+                        session['username']+'piechart3', bbox_inches='tight')
+            plt.close()
+            # Make the pie chart of the ratio of weapons ranking the last
+            c.execute('SELECT W.weap as we, COUNT(W.weap) as toprank FROM TimeRecord INNER JOIN (SELECT distinct weapon as weap ,questname,minute,seconds, COUNT(weapon) OVER(PARTITION BY questname ORDER BY minute, seconds) as countrank FROM TimeRecord) as W ON W.questname = TimeRecord.questname AND TimeRecord.weapon = W.weap WHERE W.countrank = 14 GROUP BY W.weap ORDER BY toprank;')
+            data = []
+            label = []
+            colors = []
+            explode = []
+            graphrecords = c.fetchall()
+            for s in graphrecords:
+                data.append(s['toprank'])
+                label.append(
+                    s['we']+': Total( ' + str(s['toprank'])+' )')
+                colors.append(colorDict[s['we']])
+                explode.append(0)
+            explode.remove(0)
+            explode.append(0.1)
+            plt.pie(data, labels=label, shadow=True,
+                    colors=colors, explode=explode)
+            plt.savefig(app.config['UPLOAD_FOLDER'] +
+                        session['username']+'piechart14', bbox_inches='tight')
             plt.close()
             # Make the bar graph of the average time of each weapon
-            c.execute('SELECT W.weap, AVG(W.minute*60+W.seconds) as average FROM TimeRecord INNER JOIN (SELECT distinct weapon as weap ,questname,minute,seconds, COUNT(weapon) OVER(PARTITION BY questname ORDER BY minute, seconds) as countrank FROM TimeRecord) as W ON W.questname = TimeRecord.questname AND TimeRecord.weapon = W.weap GROUP BY W.weap;')
+            c.execute('SELECT W.weap, AVG(W.minute*60+W.seconds) as average FROM TimeRecord INNER JOIN (SELECT distinct weapon as weap ,questname,minute,seconds, COUNT(weapon) OVER(PARTITION BY questname ORDER BY minute, seconds) as countrank FROM TimeRecord) as W ON W.questname = TimeRecord.questname AND TimeRecord.weapon = W.weap GROUP BY W.weap ORDER BY average;')
             avgrecords = c.fetchall()
             avgdata = []
             label = []
+            colors = []
             x = []
             i = 0
             for a in avgrecords:
@@ -121,8 +212,9 @@ def dashboard():
                 avgdata.append(a['average'])
                 label.append(a['weap'])
                 x.append(i)
+                colors.append(colorDict[a['weap']])
             plt.bar(x, avgdata, tick_label=label,
-                    width=0.8, color=['red', 'green'])
+                    width=0.8, color=colors)
             plt.xlabel('武器')
             plt.ylabel('タイム　（秒）')
             plt.title('平均記録表')
@@ -163,19 +255,21 @@ def questlist():
         c.execute('SELECT Quest.questname, Quest.monster, W.weap,W.minute,W.sec FROM Quest INNER JOIN(SELECT TimeRecord.questname as qn,TimeRecord.weapon as weap,min(TimeRecord.minute) as minute ,min(TimeRecord.seconds) as sec FROM TimeRecord INNER JOIN(SELECT questname,weapon,min(minute) as ma FROM TimeRecord GROUP BY questname,weapon) AS S ON S.questname = TimeRecord.questname AND S.weapon = TimeRecord.weapon AND S.ma = TimeRecord.minute GROUP BY TimeRecord.questname, TimeRecord.weapon) AS W ON Quest.questname = W.qn WHERE Quest.questname= %s ORDER BY W.minute ASC, W.sec ASC  LIMIT 1;',
                   (session['questname'],))
         fastest = c.fetchone()
-        c.execute('SELECT TimeRecord.weapon as weap,min(TimeRecord.minute) as minute ,min(TimeRecord.seconds) as sec FROM TimeRecord INNER JOIN(SELECT questname,weapon,min(minute) as ma FROM TimeRecord GROUP BY questname,weapon) AS S ON S.questname = TimeRecord.questname AND S.weapon = TimeRecord.weapon AND S.ma = TimeRecord.minute GROUP BY TimeRecord.questname, TimeRecord.weapon HAVING questname = %s;',
+        c.execute('SELECT TimeRecord.weapon as weap,min(TimeRecord.minute) as minute ,min(TimeRecord.seconds) as sec FROM TimeRecord INNER JOIN(SELECT questname,weapon,min(minute) as ma FROM TimeRecord GROUP BY questname,weapon) AS S ON S.questname = TimeRecord.questname AND S.weapon = TimeRecord.weapon AND S.ma = TimeRecord.minute GROUP BY TimeRecord.questname, TimeRecord.weapon HAVING questname = %s ORDER BY minute, sec;',
                   (session['questname'],))
         x = []
         tick_label = []
         y = []
         i = 0
+        colors = []
         graphrecords = c.fetchall()
         for s in graphrecords:
             i += 1
             x.append(i)
             tick_label.append(s['weap'])
             y.append(s['minute']*60+s['sec'])
-        plt.bar(x, y, tick_label=tick_label, width=0.8, color=['red', 'green'])
+            colors.append(colorDict[s['weap']])
+        plt.bar(x, y, tick_label=tick_label, width=0.8, color=colors)
         plt.xlabel('武器')
         plt.ylabel('タイム　（秒）')
         plt.title('記録表')
@@ -198,19 +292,21 @@ def record():
     c.execute('SELECT Quest.monster, W.weap,W.minute,W.sec FROM Quest INNER JOIN(SELECT TimeRecord.questname as qn,TimeRecord.weapon as weap,min(TimeRecord.minute) as minute ,min(TimeRecord.seconds) as sec FROM TimeRecord INNER JOIN(SELECT questname,weapon,min(minute) as ma FROM TimeRecord GROUP BY questname,weapon) AS S ON S.questname = TimeRecord.questname AND S.weapon = TimeRecord.weapon AND S.ma = TimeRecord.minute GROUP BY TimeRecord.questname, TimeRecord.weapon) AS W ON Quest.questname = W.qn WHERE Quest.questname= %s ORDER BY W.minute ASC, W.sec ASC  LIMIT 1;',
               (session['questname'],))
     fastest = c.fetchone()
-    c.execute('SELECT TimeRecord.weapon as weap,min(TimeRecord.minute) as minute ,min(TimeRecord.seconds) as sec FROM TimeRecord INNER JOIN(SELECT questname,weapon,min(minute) as ma FROM TimeRecord GROUP BY questname,weapon) AS S ON S.questname = TimeRecord.questname AND S.weapon = TimeRecord.weapon AND S.ma = TimeRecord.minute GROUP BY TimeRecord.questname, TimeRecord.weapon HAVING questname = %s;',
+    c.execute('SELECT TimeRecord.weapon as weap,min(TimeRecord.minute) as minute ,min(TimeRecord.seconds) as sec FROM TimeRecord INNER JOIN(SELECT questname,weapon,min(minute) as ma FROM TimeRecord GROUP BY questname,weapon) AS S ON S.questname = TimeRecord.questname AND S.weapon = TimeRecord.weapon AND S.ma = TimeRecord.minute GROUP BY TimeRecord.questname, TimeRecord.weapon HAVING questname = %s ORDER BY minute, sec;',
               (session['questname'],))
     x = []
     tick_label = []
     y = []
     i = 0
+    colors = []
     graphrecords = c.fetchall()
     for s in graphrecords:
         i += 1
         x.append(i)
         tick_label.append(s['weap'])
         y.append(s['minute']*60+s['sec'])
-    plt.bar(x, y, tick_label=tick_label, width=0.8, color=['red', 'green'])
+        colors.append(colorDict[s['weap']])
+    plt.bar(x, y, tick_label=tick_label, width=0.8, color=colors)
     plt.xlabel('武器')
     plt.ylabel('タイム　（秒）')
     plt.title('記録表')
