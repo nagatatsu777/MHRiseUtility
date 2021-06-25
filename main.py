@@ -6,7 +6,7 @@ import matplotlib
 from dotenv import load_dotenv, find_dotenv
 import os
 matplotlib.use('Agg')
-app = Flask('app')
+app = Flask(__name__)
 app.secret_key = b'xx'
 UPLOAD_FOLDER = "/Users/Lan/Desktop/MHRiseUtility/static/"
 # save path
@@ -462,4 +462,5 @@ def changeLanguage():
 
 
 #app.run(host='0.0.0.0', port=8080)
-app.run()
+if __name__ == '__main__':
+    app.run()

@@ -1,1 +1,1 @@
-web: gunicorn app:MHRISEUTILITY
+web: gunicorn app: app
