@@ -1,14 +1,17 @@
+import matplotlib
 import matplotlib.pyplot as plt
+import japanize_matplotlib
 from flask import Flask, session, redirect, render_template, request
 import mysql.connector
 from datetime import date
-import matplotlib
 from dotenv import load_dotenv, find_dotenv
 import os
 matplotlib.use('Agg')
 app = Flask(__name__)
 app.secret_key = b'xx'
 UPLOAD_FOLDER = "/Users/Lan/Desktop/MHRiseUtility/static/"
+# heroku git https://git.heroku.com/mhriserecords.git
+# webpage https://mhriserecords.herokuapp.com
 # save path
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 load_dotenv(find_dotenv())
@@ -35,6 +38,11 @@ conn = mysql.connector.connect(
     database=os.getenv("DATABASED"),
     auth_plugin='mysql_native_password'
 )
+# conn = mysql.connector.connect(
+#   user = "b5b250ea42fdaf",
+## host = "us-cdbr-east.cleardb.com",
+#database = "heroku_db"
+# )
 
 
 @app.route('/')
@@ -464,3 +472,4 @@ def changeLanguage():
 #app.run(host='0.0.0.0', port=8080)
 if __name__ == '__main__':
     app.run()
+
